@@ -18,9 +18,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import '../styles/LandingPage.css';
 
-/* -------------------------------------------------------------------------- */
-/*  Content                                                                   */
-/* -------------------------------------------------------------------------- */
+
 
 interface Feature {
   icon: LucideIcon;
@@ -73,9 +71,7 @@ const steps = [
 const reviewRows = ['Create homepage', 'Add booking form', 'Connect CRM'];
 const launchRows = ['Website is live', 'CRM is connected', 'Webinar is scheduled'];
 
-/* -------------------------------------------------------------------------- */
-/*  Three.js helpers                                                          */
-/* -------------------------------------------------------------------------- */
+
 
 function makeNameTexture(hollow: boolean, tint: string): THREE.CanvasTexture {
   const c = document.createElement('canvas');
@@ -138,15 +134,6 @@ const smoothstep = (a: number, b: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
-/* -------------------------------------------------------------------------- */
-/*  Page-wide scene                                                           */
-/*                                                                            */
-/*  One fixed canvas sits behind the whole page.                              */
-/*  - The robot hops between "anchor" elements (hero stage, features slot,    */
-/*    final CTA slot): it shrinks away, reappears at the next one and waves.  */
-/*  - Background orbs, glow and "NEXUSAI" text drift with scroll parallax and */
-/*    fade out wherever real text ([data-quiet]) is on screen.                */
-/* -------------------------------------------------------------------------- */
 
 function createScene(
   root: HTMLElement,
@@ -184,7 +171,7 @@ function createScene(
   blueLight.position.set(4, -1.5, 3);
   scene.add(blueLight);
 
-  /* ---------------------------- Robot ---------------------------------- */
+ 
   const white = new THREE.MeshStandardMaterial({ color: 0xeceaff, metalness: 0.5, roughness: 0.28 });
   const dark = new THREE.MeshStandardMaterial({ color: 0x0b0b1a, metalness: 0.9, roughness: 0.15 });
   const glowPurple = new THREE.MeshStandardMaterial({
@@ -302,7 +289,7 @@ function createScene(
     satellites.push({ mesh, radius: 2.2 + i * 0.25, speed: 0.6 + i * 0.25, phase: i * 2.1 });
   }
 
-  /* ------------------------ Background: soft glow ----------------------- */
+
   const glowTex = makeGlowTexture();
   interface Glow {
     sprite: THREE.Sprite;
@@ -331,7 +318,7 @@ function createScene(
     glows.push({ sprite, home, sp: 0.05 + Math.random() * 0.06, ph: Math.random() * 6, par: 0.0012 });
   }
 
-  /* ---------------------- Background: soft floating orbs ---------------- */
+ 
   const orbGeo = new THREE.SphereGeometry(1, 32, 32);
   const torusGeo = new THREE.TorusGeometry(0.7, 0.28, 24, 48);
   const icoGeo = new THREE.IcosahedronGeometry(0.9, 0);
@@ -399,7 +386,7 @@ function createScene(
     });
   }
 
-  /* ---------------------- Background: falling brand text ---------------- */
+ 
   const textures = [
     makeNameTexture(true, '#a995ff'),
     makeNameTexture(false, '#a995ff'),
@@ -452,7 +439,7 @@ function createScene(
     sprite.position.set((Math.random() - 0.5) * 26, y, z);
   }
 
-  /* ------------------------------ Dust ---------------------------------- */
+
   const dustCount = 600;
   const dustPos = new Float32Array(dustCount * 3);
   for (let i = 0; i < dustCount; i++) {
@@ -475,7 +462,7 @@ function createScene(
   );
   scene.add(dust);
 
-  /* --------------------------- Sizing + input --------------------------- */
+ 
   let vw = window.innerWidth;
   let vh = window.innerHeight;
   let halfH = 1;
@@ -529,7 +516,7 @@ function createScene(
   window.addEventListener('pointermove', onMove, { passive: true });
   window.addEventListener('pointerdown', onDown);
 
-  // Elements whose area should stay calm (real text lives here)
+ 
   const quietEls = Array.from(root.querySelectorAll<HTMLElement>('[data-quiet]'));
   let quietRects: DOMRect[] = [];
   const quietAt = (px: number, py: number, pad: number) => {
@@ -539,7 +526,7 @@ function createScene(
     return 0;
   };
 
-  /* ------------------------------ Loop ---------------------------------- */
+ 
   const v = new THREE.Vector3();
   const vis: number[] = anchors.map(() => 0);
   const rects: DOMRect[] = [];
@@ -570,7 +557,7 @@ function createScene(
 
     quietRects = quietEls.map((el) => el.getBoundingClientRect());
 
-    /* ---- robot: choose anchor, hop, follow ---- */
+  
     const upp = (2 * halfH) / vh; // world units per pixel at z = 0
     let best = 0;
     anchors.forEach((a, i) => {
@@ -651,7 +638,7 @@ function createScene(
       s.mesh.position.set(Math.cos(a) * s.radius, Math.sin(a * 0.9) * 0.8, Math.sin(a) * s.radius * 0.6);
     }
 
-    /* ---- glow blobs ---- */
+    
     for (const g of glows) {
       g.sprite.position.set(
         g.home.x + Math.sin(t * g.sp + g.ph) * 1.5,
@@ -660,7 +647,7 @@ function createScene(
       );
     }
 
-    /* ---- floating orbs: drift, parallax, dodge cursor, fade over text ---- */
+    
     for (const f of floaters) {
       const dispY = wrapY(f.base.y + scrollS * f.par);
       const dx = f.base.x - mouseWorld.x;
@@ -691,7 +678,7 @@ function createScene(
       f.mat.opacity = f.baseOpacity * (1 - 0.88 * f.q);
     }
 
-    /* ---- falling NEXUSAI ---- */
+    
     for (const f of fallers) {
       f.y -= f.speed * dt;
       const disp = wrapY(f.y + scrollS * f.par);
@@ -738,9 +725,6 @@ function createScene(
   };
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Small pieces                                                              */
-/* -------------------------------------------------------------------------- */
 
 function MarqueeBand({ reverse = false }: { reverse?: boolean }) {
   const row = (copy: number) => (
@@ -808,9 +792,7 @@ function TypedPrompt({ reduced }: { reduced: boolean }) {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Page                                                                      */
-/* -------------------------------------------------------------------------- */
+
 
 function LandingPage() {
   const pageRef = useRef<HTMLElement>(null);
@@ -825,7 +807,7 @@ function LandingPage() {
     [],
   );
 
-  // Three.js scene
+  
   useEffect(() => {
     const root = pageRef.current;
     const canvas = canvasRef.current;
@@ -841,7 +823,7 @@ function LandingPage() {
     return () => dispose?.();
   }, [reduced]);
 
-  // Reveal on scroll + scroll progress bar
+  
   useEffect(() => {
     const root = pageRef.current;
     if (!root) return;
@@ -871,7 +853,7 @@ function LandingPage() {
     };
   }, []);
 
-  // "How it works" auto-advances; clicking a step jumps there
+ 
   useEffect(() => {
     if (reduced) return;
     const id = window.setTimeout(() => setActiveStep((s) => (s + 1) % steps.length), 3800);
@@ -932,7 +914,7 @@ function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero: robot on the left, copy on the right */}
+    
       <section className="landing-hero" onMouseMove={onHeroMove}>
         <div className="landing-spotlight" />
 
@@ -979,7 +961,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Crossing marquee bands */}
+   
       <div className="landing-marquee-zone" aria-hidden="true">
         <div className="landing-band landing-band-a">
           <MarqueeBand />
@@ -989,7 +971,7 @@ function LandingPage() {
         </div>
       </div>
 
-      {/* Features: the robot hops here and sits beside the heading */}
+      
       <section className="landing-features" id="features">
         <div className="landing-features-head">
           <div className="landing-section-heading" data-reveal data-quiet>
@@ -1084,7 +1066,7 @@ function LandingPage() {
           ))}
         </div>
 
-        {/* The robot hops here and waves above the button */}
+    
         <div className="landing-robot-slot landing-robot-slot-cta" ref={ctaSlotRef} aria-hidden="true" />
 
         <Link to="/signup" className="landing-primary-button landing-bottom-cta">

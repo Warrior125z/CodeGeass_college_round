@@ -34,6 +34,17 @@ function MessageBubble({
   return (
     <article
       className={`message-bubble message-bubble-${role}`}
+      onPointerMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty(
+          '--cursor-x',
+          `${event.clientX - rect.left}px`
+        );
+        event.currentTarget.style.setProperty(
+          '--cursor-y',
+          `${event.clientY - rect.top}px`
+        );
+      }}
     >
       <div className="message-bubble-avatar">
         {isAssistant ? (

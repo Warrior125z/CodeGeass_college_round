@@ -7,7 +7,6 @@ import {
   UserRound,
   TrendingUp,
   CircleDollarSign,
-  MoreHorizontal,
   Mail,
   X,
 } from 'lucide-react';
@@ -31,64 +30,6 @@ type Lead = {
   createdAt: string;
 };
 
-const initialLeads: Lead[] = [
-  {
-    id: 1,
-    name: 'Aarav Mehta',
-    company: 'BrightLabs',
-    email: 'aarav@example.com',
-    phone: '+91 98765 43210',
-    source: 'Website',
-    status: 'Qualified',
-    value: 45000,
-    createdAt: 'Today',
-  },
-  {
-    id: 2,
-    name: 'Priya Sharma',
-    company: 'NovaTech',
-    email: 'priya@example.com',
-    phone: '+91 98765 12340',
-    source: 'Referral',
-    status: 'Contacted',
-    value: 28000,
-    createdAt: 'Today',
-  },
-  {
-    id: 3,
-    name: 'Rehan Khan',
-    company: 'PixelWorks',
-    email: 'rehan@example.com',
-    phone: '+91 99887 66554',
-    source: 'Campaign',
-    status: 'New',
-    value: 18000,
-    createdAt: 'Yesterday',
-  },
-  {
-    id: 4,
-    name: 'Ananya Desai',
-    company: 'CloudNest',
-    email: 'ananya@example.com',
-    phone: '+91 91234 56780',
-    source: 'Website',
-    status: 'Converted',
-    value: 62000,
-    createdAt: 'Yesterday',
-  },
-  {
-    id: 5,
-    name: 'Kabir Patel',
-    company: 'Orbit Digital',
-    email: 'kabir@example.com',
-    phone: '+91 97654 32109',
-    source: 'LinkedIn',
-    status: 'Contacted',
-    value: 35000,
-    createdAt: '2 days ago',
-  },
-];
-
 const statusOptions: LeadStatus[] = [
   'New',
   'Contacted',
@@ -105,7 +46,7 @@ function formatCurrency(value: number) {
 }
 
 function CRM() {
-  const [leads, setLeads] = useState<Lead[]>(initialLeads);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showForm, setShowForm] = useState(false);
@@ -182,7 +123,21 @@ function CRM() {
       <main className="crm-main">
         <Topbar title="CRM" />
 
-        <section className="crm-content">
+        <section
+          className="crm-content"
+          onPointerMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+            event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+          }}
+        >
+          <div className="nexus-ambient-layer" aria-hidden="true" />
+          <div className="nexus-floating-agent" aria-hidden="true">
+            <video autoPlay muted loop playsInline>
+              <source src="/videos/nexus-robot.mp4" type="video/mp4" />
+            </video>
+            <span>NEXUS AI</span>
+          </div>
           <div className="crm-heading">
             <div>
               <span className="crm-eyebrow">
@@ -376,19 +331,7 @@ function CRM() {
                       <td className="crm-date">{lead.createdAt}</td>
 
                       <td>
-                        <button
-                          type="button"
-                          className="crm-row-action"
-                          title={`Contact ${lead.name}`}
-                          aria-label={`Show contact details for ${lead.name}`}
-                          onClick={() =>
-                            window.alert(
-                              `${lead.name}\n${lead.email}\n${lead.phone}`
-                            )
-                          }
-                        >
-                          <MoreHorizontal size={17} />
-                        </button>
+                        <span className="crm-row-action-placeholder" aria-hidden="true" />
                       </td>
                     </tr>
                   ))}

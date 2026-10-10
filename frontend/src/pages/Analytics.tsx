@@ -2,13 +2,10 @@
 import { useState } from 'react';
 import {
   Activity,
-  ArrowDownRight,
-  ArrowUpRight,
   BarChart3,
   CalendarDays,
   Download,
   Globe,
-  MousePointer2,
   Target,
   TrendingUp,
   Users,
@@ -18,86 +15,8 @@ import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import '../styles/Analytics.css';
 
-const trafficData = [
-  { day: 'Mon', visitors: 420, leads: 24 },
-  { day: 'Tue', visitors: 610, leads: 36 },
-  { day: 'Wed', visitors: 520, leads: 29 },
-  { day: 'Thu', visitors: 780, leads: 48 },
-  { day: 'Fri', visitors: 690, leads: 41 },
-  { day: 'Sat', visitors: 910, leads: 57 },
-  { day: 'Sun', visitors: 740, leads: 45 },
-];
-
-const sourceData = [
-  { name: 'Direct', visitors: 1240, percentage: 42 },
-  { name: 'Social media', visitors: 890, percentage: 30 },
-  { name: 'Search engines', visitors: 530, percentage: 18 },
-  { name: 'Referrals', visitors: 300, percentage: 10 },
-];
-
-const recentEvents = [
-  {
-    title: 'New lead captured',
-    description: 'A visitor submitted the contact form.',
-    time: '10 minutes ago',
-    icon: Users,
-  },
-  {
-    title: 'Website traffic increased',
-    description: 'Visitor activity was higher than the previous period.',
-    time: '35 minutes ago',
-    icon: TrendingUp,
-  },
-  {
-    title: 'Campaign link clicked',
-    description: 'A visitor opened a campaign link.',
-    time: '1 hour ago',
-    icon: MousePointer2,
-  },
-  {
-    title: 'Website page viewed',
-    description: 'A visitor opened the home page.',
-    time: '2 hours ago',
-    icon: Globe,
-  },
-];
-
 function Analytics() {
   const [period, setPeriod] = useState('7 days');
-  const [showDemoNotice, setShowDemoNotice] = useState(true);
-
-  const metrics = [
-    {
-      label: 'Total visitors',
-      value: '4,280',
-      change: '+12.8%',
-      positive: true,
-      icon: Users,
-    },
-    {
-      label: 'New leads',
-      value: '184',
-      change: '+8.4%',
-      positive: true,
-      icon: Target,
-    },
-    {
-      label: 'Conversion rate',
-      value: '4.3%',
-      change: '+1.2%',
-      positive: true,
-      icon: TrendingUp,
-    },
-    {
-      label: 'Page views',
-      value: '8,642',
-      change: '-2.1%',
-      positive: false,
-      icon: BarChart3,
-    },
-  ];
-
-  const maxVisitors = Math.max(...trafficData.map((item) => item.visitors));
 
   return (
     <div className="analytics-layout">
@@ -106,7 +25,21 @@ function Analytics() {
       <main className="analytics-main">
         <Topbar title="Analytics" />
 
-        <section className="analytics-content">
+        <section
+          className="analytics-content"
+          onPointerMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+            event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+          }}
+        >
+          <div className="analytics-ambient-layer" aria-hidden="true" />
+          <div className="nexus-floating-agent" aria-hidden="true">
+            <video autoPlay muted loop playsInline>
+              <source src="/videos/nexus-robot.mp4" type="video/mp4" />
+            </video>
+            <span>NEXUS AI</span>
+          </div>
           <div className="analytics-heading">
             <div>
               <span className="analytics-eyebrow">
@@ -144,59 +77,29 @@ function Analytics() {
             </div>
           </div>
 
-          {showDemoNotice && (
-            <div className="analytics-demo-notice">
-              <span>
-                <Activity size={17} />
-              </span>
-              <p>
-                <strong>Preview data</strong>
-                These sample metrics are for demonstration and are not live
-                business analytics yet.
-              </p>
-              <button
-                type="button"
-                onClick={() => setShowDemoNotice(false)}
-                aria-label="Dismiss demo data notice"
-              >
-                ×
-              </button>
-            </div>
-          )}
-
           <div className="analytics-metrics-grid">
-            {metrics.map((metric) => {
-              const Icon = metric.icon;
-
+            {[
+              { label: 'Total visitors', icon: Users },
+              { label: 'New leads', icon: Target },
+              { label: 'Conversion rate', icon: TrendingUp },
+              { label: 'Page views', icon: BarChart3 },
+            ].map(({ label, icon: Icon }) => {
               return (
-                <article className="analytics-metric-card" key={metric.label}>
+                <article className="analytics-metric-card" key={label}>
                   <div className="analytics-metric-top">
-                    <span>{metric.label}</span>
+                    <span>{label}</span>
                     <span className="analytics-metric-icon">
                       <Icon size={18} />
                     </span>
                   </div>
 
                   <strong className="analytics-metric-value">
-                    {metric.value}
+                    —
                   </strong>
 
                   <div className="analytics-metric-bottom">
-                    <span
-                      className={
-                        metric.positive
-                          ? 'analytics-change positive'
-                          : 'analytics-change negative'
-                      }
-                    >
-                      {metric.positive ? (
-                        <ArrowUpRight size={14} />
-                      ) : (
-                        <ArrowDownRight size={14} />
-                      )}
-                      {metric.change}
-                    </span>
-                    <span>vs. previous period</span>
+                    <span className="analytics-change">No data yet</span>
+                    <span>{period}</span>
                   </div>
                 </article>
               );
@@ -210,10 +113,6 @@ function Analytics() {
                   <h3>Traffic overview</h3>
                   <p>Visitors throughout the selected week</p>
                 </div>
-                <span className="analytics-live-label">
-                  <span />
-                  Demo
-                </span>
               </div>
 
               <div className="analytics-chart-legend">
@@ -246,27 +145,9 @@ function Analytics() {
                   </div>
 
                   <div className="analytics-bars">
-                    {trafficData.map((item) => (
-                      <div className="analytics-bar-group" key={item.day}>
-                        <div className="analytics-bar-pair">
-                          <div
-                            className="analytics-bar visitors-bar"
-                            style={{
-                              height: `${(item.visitors / maxVisitors) * 100}%`,
-                            }}
-                            title={`${item.visitors} visitors`}
-                          />
-                          <div
-                            className="analytics-bar leads-bar"
-                            style={{
-                              height: `${(item.leads / maxVisitors) * 100}%`,
-                            }}
-                            title={`${item.leads} leads`}
-                          />
-                        </div>
-                        <span className="analytics-bar-day">{item.day}</span>
-                      </div>
-                    ))}
+                    <div className="analytics-empty-chart">
+                      Analytics will appear when your workspace receives activity.
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,11 +155,11 @@ function Analytics() {
               <div className="analytics-chart-footer">
                 <div>
                   <span>Total visitors</span>
-                  <strong>4,670</strong>
+                  <strong>—</strong>
                 </div>
                 <div>
                   <span>Total leads</span>
-                  <strong>280</strong>
+                  <strong>—</strong>
                 </div>
                 <div>
                   <span>Selected period</span>
@@ -297,25 +178,9 @@ function Analytics() {
               </div>
 
               <div className="analytics-source-list">
-                {sourceData.map((source) => (
-                  <div className="analytics-source" key={source.name}>
-                    <div className="analytics-source-top">
-                      <span>{source.name}</span>
-                      <strong>{source.percentage}%</strong>
-                    </div>
-
-                    <div className="analytics-source-track">
-                      <div
-                        className="analytics-source-fill"
-                        style={{ width: `${source.percentage}%` }}
-                      />
-                    </div>
-
-                    <span className="analytics-source-visitors">
-                      {source.visitors.toLocaleString()} visitors
-                    </span>
-                  </div>
-                ))}
+                <div className="analytics-empty-chart">
+                  Traffic sources will appear when visitor data is available.
+                </div>
               </div>
             </section>
           </div>
@@ -324,34 +189,14 @@ function Analytics() {
             <div className="analytics-panel-heading">
               <div>
                 <h3>Recent activity</h3>
-                <p>Example events from across your workspace</p>
+                <p>Activity from across your workspace</p>
               </div>
-              <button
-                className="analytics-text-button"
-                type="button"
-                onClick={() => setShowDemoNotice(true)}
-              >
-                View demo notice
-              </button>
             </div>
 
             <div className="analytics-event-list">
-              {recentEvents.map((event) => {
-                const Icon = event.icon;
-
-                return (
-                  <div className="analytics-event" key={event.title}>
-                    <span className="analytics-event-icon">
-                      <Icon size={17} />
-                    </span>
-                    <div className="analytics-event-copy">
-                      <strong>{event.title}</strong>
-                      <p>{event.description}</p>
-                    </div>
-                    <span className="analytics-event-time">{event.time}</span>
-                  </div>
-                );
-              })}
+              <div className="analytics-empty-chart">
+                Recent activity will appear here once your workspace is active.
+              </div>
             </div>
           </section>
         </section>

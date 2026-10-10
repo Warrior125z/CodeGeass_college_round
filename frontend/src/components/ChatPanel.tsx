@@ -36,7 +36,14 @@ function ChatPanel({
   }
 
   return (
-    <section className="nexus-chat-panel">
+    <section
+      className="nexus-chat-panel"
+      onPointerMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+        event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+      }}
+    >
       <div className="chat-panel-header">
         <div className="chat-panel-agent-icon">
           <Sparkles size={18} />
@@ -91,9 +98,16 @@ function ChatPanel({
         )}
 
         {isLoading && (
-          <div className="chat-panel-loading">
-            <LoaderCircle size={16} className="chat-panel-spinner" />
-            <span>Nexus AI is thinking...</span>
+          <div className="chat-panel-progress">
+            <div className="chat-panel-robot">
+              <video autoPlay muted loop playsInline aria-hidden="true">
+                <source src="/videos/nexus-robot.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div className="chat-panel-loading">
+              <LoaderCircle size={16} className="chat-panel-spinner" />
+              <span>Your work is in progress. Stay with me.</span>
+            </div>
           </div>
         )}
       </div>

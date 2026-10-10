@@ -22,7 +22,15 @@ function AuthLayout({
   footerLinkTo,
 }: AuthLayoutProps) {
   return (
-    <main className="auth-layout">
+    <main
+      className="auth-layout"
+      onPointerMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+        event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+      }}
+    >
+      <div className="nexus-ambient-layer" aria-hidden="true" />
       <section className="auth-layout-brand-panel">
         <Link to="/" className="auth-layout-brand">
           <span className="auth-layout-brand-icon">

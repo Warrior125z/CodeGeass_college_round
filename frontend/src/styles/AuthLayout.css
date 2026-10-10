@@ -1,10 +1,29 @@
 
 .auth-layout {
+  position: relative;
+  isolation: isolate;
   display: grid;
   min-height: 100vh;
   grid-template-columns: 1fr 0.9fr;
   color: #f1efff;
   background: #0c0d19;
+}
+
+.auth-layout > .nexus-ambient-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 180px at var(--cursor-x, 18%) var(--cursor-y, 35%), rgba(120, 79, 255, 0.18), transparent 72%),
+    radial-gradient(circle at 78% 70%, rgba(45, 117, 255, 0.1), transparent 24%);
+  animation: nexus-auth-pulse 12s ease-in-out infinite alternate;
+}
+
+@keyframes nexus-auth-pulse {
+  from { transform: scale(1); opacity: 0.75; }
+  to { transform: scale(1.08) translate3d(1%, -1%, 0); opacity: 1; }
 }
 
 .auth-layout * {

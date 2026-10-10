@@ -33,48 +33,6 @@ type Webinar = {
   category: string;
 };
 
-const initialWebinars: Webinar[] = [
-  {
-    id: 1,
-    title: 'Building Your First AI Product',
-    description:
-      'Learn how to turn an idea into a practical AI-powered product.',
-    date: '2026-10-15',
-    time: '17:00',
-    duration: 60,
-    host: 'Nexus AI Team',
-    registrations: 128,
-    status: 'Upcoming',
-    category: 'Artificial Intelligence',
-  },
-  {
-    id: 2,
-    title: 'Marketing That Converts',
-    description:
-      'Understand customer journeys and build better marketing campaigns.',
-    date: '2026-10-18',
-    time: '16:00',
-    duration: 45,
-    host: 'Growth Team',
-    registrations: 86,
-    status: 'Upcoming',
-    category: 'Marketing',
-  },
-  {
-    id: 3,
-    title: 'Getting Started with Automation',
-    description:
-      'Discover practical ways to automate repetitive business tasks.',
-    date: '2026-10-05',
-    time: '15:00',
-    duration: 50,
-    host: 'Product Team',
-    registrations: 204,
-    status: 'Completed',
-    category: 'Automation',
-  },
-];
-
 const webinarStatuses: WebinarStatus[] = [
   'Upcoming',
   'Live',
@@ -93,7 +51,7 @@ function formatDate(date: string) {
 }
 
 function Webinars() {
-  const [webinars, setWebinars] = useState<Webinar[]>(initialWebinars);
+  const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showForm, setShowForm] = useState(false);
@@ -180,7 +138,21 @@ function Webinars() {
       <main className="webinars-main">
         <Topbar title="Webinars" />
 
-        <section className="webinars-content">
+        <section
+          className="webinars-content"
+          onPointerMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+            event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+          }}
+        >
+          <div className="nexus-ambient-layer" aria-hidden="true" />
+          <div className="nexus-floating-agent" aria-hidden="true">
+            <video autoPlay muted loop playsInline>
+              <source src="/videos/nexus-robot.mp4" type="video/mp4" />
+            </video>
+            <span>NEXUS AI</span>
+          </div>
           <div className="webinars-heading">
             <div>
               <span className="webinars-eyebrow">

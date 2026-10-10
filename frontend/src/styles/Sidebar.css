@@ -1,3 +1,9 @@
+/* ==========================================================================
+   Nexus AI sidebar
+   - one pill slides to the active page, a softer one follows the pointer
+   - labels fade (never pop) when collapsing; tooltips appear when collapsed
+   - mobile drawer slides and the overlay fades
+   ========================================================================== */
 
 .nexus-sidebar {
   position: sticky;
@@ -9,13 +15,27 @@
   flex-direction: column;
   padding: 22px 14px 15px;
   border-right: 1px solid rgba(255, 255, 255, 0.07);
-  background: #0c0d19;
-  transition: width 0.25s ease, flex-basis 0.25s ease, transform 0.25s ease;
+  background:
+    radial-gradient(260px circle at 0% 0%, rgba(121, 92, 255, 0.12), transparent 70%),
+    #0c0d19;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), flex-basis 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   z-index: 20;
 }
 
 .nexus-sidebar * {
   box-sizing: border-box;
+}
+
+.nexus-sidebar a:focus-visible,
+.nexus-sidebar button:focus-visible,
+.sidebar-mobile-toggle:focus-visible {
+  outline: 2px solid #a995ff;
+  outline-offset: 2px;
+}
+
+.nexus-sidebar-leaving {
+  opacity: 0.45;
 }
 
 .nexus-sidebar-collapsed {
@@ -24,6 +44,25 @@
   padding-right: 12px;
   padding-left: 12px;
 }
+
+/* ---------- Labels: fade + collapse instead of unmounting ---------- */
+
+.sidebar-label {
+  display: inline-block;
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 1;
+  transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease 0.08s;
+}
+
+.nexus-sidebar-collapsed .sidebar-label {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease;
+}
+
+/* ---------- Brand ---------- */
 
 .sidebar-brand-row {
   display: flex;
@@ -47,6 +86,7 @@
 }
 
 .sidebar-brand-icon {
+  position: relative;
   display: grid;
   flex: 0 0 36px;
   width: 36px;
@@ -56,6 +96,20 @@
   border-radius: 11px;
   color: #b8a8ff;
   background: rgba(125, 97, 255, 0.12);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sidebar-brand-icon::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(162, 142, 255, 0.55);
+  border-radius: 11px;
+  animation: sidebar-ping 3.2s ease-out infinite;
+}
+
+.sidebar-brand:hover .sidebar-brand-icon {
+  transform: rotate(-8deg) scale(1.08);
 }
 
 .sidebar-brand-highlight {
@@ -74,11 +128,17 @@
   color: #898aa7;
   background: transparent;
   cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .sidebar-collapse-button:hover {
+  border-color: rgba(169, 149, 255, 0.4);
   color: white;
   background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-collapse-button svg {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-chevron-rotated {
@@ -92,7 +152,10 @@
 
 .nexus-sidebar-collapsed .sidebar-brand {
   justify-content: center;
+  gap: 0;
 }
+
+/* ---------- Workspace label ---------- */
 
 .sidebar-workspace-label {
   display: flex;
@@ -104,6 +167,7 @@
   font-weight: 750;
   letter-spacing: 1.1px;
   white-space: nowrap;
+  transition: margin 0.3s ease;
 }
 
 .sidebar-workspace-dot,
@@ -115,19 +179,83 @@
   background: #8f7bff;
 }
 
+.sidebar-workspace-dot {
+  animation: sidebar-pulse 2.4s ease-in-out infinite;
+}
+
 .nexus-sidebar-collapsed .sidebar-workspace-label {
   justify-content: center;
+  gap: 0;
   margin: 28px 0 13px;
 }
 
+/* ---------- Navigation ---------- */
+
 .sidebar-navigation {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
+/* The two pills. Their position/height come from CSS variables set in JS. */
+.sidebar-pill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-pill-hover {
+  height: var(--hover-h, 44px);
+  background: rgba(255, 255, 255, 0.045);
+  transform: translateY(var(--hover-y, 0px));
+}
+
+.sidebar-pill-active {
+  height: var(--active-h, 44px);
+  border: 1px solid rgba(159, 140, 255, 0.16);
+  background: linear-gradient(100deg, rgba(126, 100, 255, 0.22), rgba(126, 100, 255, 0.07));
+  box-shadow: 0 0 28px rgba(121, 92, 255, 0.12);
+  transform: translateY(var(--active-y, 0px));
+}
+
+/* accent bar on the active pill */
+.sidebar-pill-active::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: -1px;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: #9d87ff;
+  box-shadow: 0 0 10px rgba(157, 135, 255, 0.8);
+}
+
+.sidebar-navigation.has-active .sidebar-pill-active {
+  opacity: 1;
+}
+
+.sidebar-navigation.has-hover .sidebar-pill-hover {
+  opacity: 1;
+}
+
+/* animate only after first paint */
+.sidebar-navigation.is-ready .sidebar-pill-active {
+  transition: transform 0.5s cubic-bezier(0.34, 1.35, 0.5, 1), height 0.3s ease, opacity 0.2s ease;
+}
+
+.sidebar-navigation.is-ready .sidebar-pill-hover {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s ease, opacity 0.2s ease;
+}
+
 .sidebar-nav-link {
   position: relative;
+  z-index: 1;
   display: flex;
   min-height: 44px;
   align-items: center;
@@ -139,37 +267,36 @@
   font-size: 12px;
   font-weight: 550;
   text-decoration: none;
-  transition: color 0.18s ease, background 0.18s ease;
+  transition: color 0.18s ease, padding 0.3s ease, gap 0.3s ease;
+  animation: sidebar-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 120ms);
 }
 
 .sidebar-nav-link:hover {
   color: #e4e1ff;
-  background: rgba(255, 255, 255, 0.035);
 }
 
-.sidebar-nav-link-active {
-  border-color: rgba(159, 140, 255, 0.13);
-  color: #c5b9ff;
-  background: linear-gradient(100deg, rgba(126, 100, 255, 0.17), rgba(126, 100, 255, 0.06));
+.sidebar-nav-link-active,
+.sidebar-nav-link-active:hover {
+  color: #d3caff;
 }
 
-.sidebar-nav-link-active::before {
-  position: absolute;
-  top: 10px;
-  bottom: 10px;
-  left: -1px;
-  width: 3px;
-  border-radius: 0 4px 4px 0;
-  background: #9d87ff;
-  content: '';
-}
-
-.sidebar-nav-link > svg {
+.sidebar-nav-icon {
   flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sidebar-nav-link:hover .sidebar-nav-icon {
+  transform: translateX(2px) scale(1.12);
+}
+
+.sidebar-nav-link-active .sidebar-nav-icon {
+  color: #b9a9ff;
 }
 
 .nexus-sidebar-collapsed .sidebar-nav-link {
   justify-content: center;
+  gap: 0;
   padding: 0;
 }
 
@@ -179,10 +306,56 @@
   border: 1px solid rgba(161, 140, 255, 0.2);
   border-radius: 5px;
   color: #b5a5ff;
-  background: rgba(129, 105, 255, 0.1);
+  background:
+    linear-gradient(110deg, transparent 30%, rgba(190, 175, 255, 0.35) 50%, transparent 70%) -150% 0 / 200% 100% no-repeat,
+    rgba(129, 105, 255, 0.1);
   font-size: 8px;
   font-weight: 800;
+  animation: sidebar-shimmer 3.6s ease-in-out 1.5s infinite;
 }
+
+.nexus-sidebar-collapsed .sidebar-ai-badge {
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
+  border-width: 0;
+}
+
+/* Tooltips when collapsed (desktop only) */
+@media (min-width: 761px) {
+  .nexus-sidebar-collapsed [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 14px);
+    z-index: 40;
+    padding: 6px 10px;
+    border: 1px solid rgba(173, 159, 255, 0.2);
+    border-radius: 8px;
+    color: #f3f1ff;
+    background: #17182a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-6px, -50%);
+    transition: opacity 0.18s ease 0.1s, transform 0.18s ease 0.1s;
+  }
+
+  .nexus-sidebar-collapsed [data-tip]:hover::after,
+  .nexus-sidebar-collapsed [data-tip]:focus-visible::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  .nexus-sidebar-collapsed .sidebar-logout-button {
+    position: relative;
+  }
+}
+
+/* ---------- Bottom area ---------- */
 
 .sidebar-bottom {
   display: flex;
@@ -192,10 +365,46 @@
 }
 
 .sidebar-tip-card {
+  position: relative;
+  overflow: hidden;
+  max-height: 230px;
   padding: 14px;
   border: 1px solid rgba(160, 141, 255, 0.15);
   border-radius: 12px;
   background: linear-gradient(145deg, rgba(119, 94, 255, 0.1), rgba(119, 94, 255, 0.025));
+  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease, margin 0.3s ease, border-color 0.2s ease;
+}
+
+.sidebar-tip-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(160px circle at var(--px, 50%) var(--py, 50%), rgba(150, 125, 255, 0.2), transparent 70%);
+  transition: opacity 0.25s ease;
+}
+
+.sidebar-tip-card:hover {
+  border-color: rgba(160, 141, 255, 0.35);
+}
+
+.sidebar-tip-card:hover::before {
+  opacity: 1;
+}
+
+.nexus-sidebar-collapsed .sidebar-tip-card {
+  max-height: 0;
+  margin-bottom: -13px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-tip-card > * {
+  position: relative;
 }
 
 .sidebar-tip-icon {
@@ -207,6 +416,12 @@
   border-radius: 9px;
   color: #b6a7ff;
   background: rgba(130, 105, 255, 0.15);
+  animation: sidebar-pulse 3s ease-in-out infinite;
+}
+
+.sidebar-tip-body {
+  min-height: 62px;
+  animation: sidebar-tip-in 0.5s ease both;
 }
 
 .sidebar-tip-card strong {
@@ -220,11 +435,39 @@
   line-height: 1.7;
 }
 
-.sidebar-tip-card a {
+.sidebar-tip-card > a {
   color: #b5a5ff;
   font-size: 10px;
   font-weight: 700;
   text-decoration: none;
+}
+
+.sidebar-tip-card > a span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-tip-card > a:hover span {
+  transform: translateX(4px);
+}
+
+.sidebar-tip-dots {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.sidebar-tip-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.sidebar-tip-dots span.is-active {
+  width: 16px;
+  background: #9d87ff;
 }
 
 .sidebar-logout-button {
@@ -241,6 +484,12 @@
   font-size: 12px;
   text-align: left;
   cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, padding 0.3s ease, gap 0.3s ease;
+}
+
+.sidebar-logout-button svg {
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sidebar-logout-button:hover {
@@ -249,8 +498,17 @@
   background: rgba(255, 128, 150, 0.05);
 }
 
+.sidebar-logout-button:hover svg {
+  transform: translateX(3px);
+}
+
+.nexus-sidebar-leaving .sidebar-logout-button svg {
+  animation: sidebar-leave 0.38s ease forwards;
+}
+
 .nexus-sidebar-collapsed .sidebar-logout-button {
   justify-content: center;
+  gap: 0;
   padding: 0;
 }
 
@@ -266,14 +524,81 @@
 
 .sidebar-version-dot {
   background: #7bd8a4;
+  animation: sidebar-pulse 2.4s ease-in-out infinite;
 }
 
-.sidebar-mobile-toggle {
-  display: none;
+.nexus-sidebar-collapsed .sidebar-version {
+  justify-content: center;
+  gap: 0;
 }
 
+/* ---------- Mobile ---------- */
+
+.sidebar-mobile-toggle,
 .sidebar-mobile-overlay {
   display: none;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes sidebar-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sidebar-tip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sidebar-ping {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes sidebar-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes sidebar-shimmer {
+  0%, 60% {
+    background-position: -150% 0, 0 0;
+  }
+  100% {
+    background-position: 150% 0, 0 0;
+  }
+}
+
+@keyframes sidebar-leave {
+  to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
 }
 
 @media (max-width: 760px) {
@@ -291,6 +616,29 @@
     color: #e8e5ff;
     background: #151627;
     cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .sidebar-mobile-toggle:hover,
+  .sidebar-mobile-toggle.is-open {
+    border-color: rgba(169, 149, 255, 0.5);
+    background: #1c1b38;
+  }
+
+  .sidebar-mobile-toggle svg {
+    grid-area: 1 / 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+  }
+
+  .sidebar-toggle-close,
+  .sidebar-mobile-toggle.is-open .sidebar-toggle-menu {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+
+  .sidebar-mobile-toggle.is-open .sidebar-toggle-close {
+    opacity: 1;
+    transform: rotate(0) scale(1);
   }
 
   .nexus-sidebar {
@@ -300,40 +648,77 @@
     left: 0;
     width: 250px;
     height: 100dvh;
+    box-shadow: none;
     transform: translateX(-100%);
   }
 
   .nexus-sidebar.nexus-sidebar-mobile-open {
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5);
     transform: translateX(0);
   }
 
+  /* collapsing makes no sense in the drawer: always show everything */
   .nexus-sidebar-collapsed {
     width: 250px;
     flex-basis: 250px;
     padding: 22px 14px 15px;
   }
 
+  .nexus-sidebar-collapsed .sidebar-label {
+    max-width: 180px;
+    opacity: 1;
+  }
+
   .nexus-sidebar-collapsed .sidebar-brand-row {
     flex-direction: row;
+    gap: 8px;
   }
 
   .nexus-sidebar-collapsed .sidebar-brand {
     justify-content: flex-start;
+    gap: 9px;
   }
 
   .nexus-sidebar-collapsed .sidebar-workspace-label {
     justify-content: flex-start;
+    gap: 8px;
     margin: 35px 8px 13px;
   }
 
   .nexus-sidebar-collapsed .sidebar-nav-link {
     justify-content: flex-start;
+    gap: 13px;
     padding: 0 12px;
+  }
+
+  .nexus-sidebar-collapsed .sidebar-ai-badge {
+    margin-left: auto;
+    padding: 3px 5px;
+    border-width: 1px;
   }
 
   .nexus-sidebar-collapsed .sidebar-logout-button {
     justify-content: flex-start;
+    gap: 12px;
     padding: 0 12px;
+  }
+
+  .nexus-sidebar-collapsed .sidebar-version {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .nexus-sidebar-collapsed .sidebar-tip-card {
+    max-height: 230px;
+    margin-bottom: 0;
+    padding: 14px;
+    border-width: 1px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar-collapse-button {
+    display: none;
   }
 
   .sidebar-mobile-overlay {
@@ -343,5 +728,28 @@
     display: block;
     border: none;
     background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebar-mobile-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexus-sidebar,
+  .nexus-sidebar *,
+  .nexus-sidebar *::before,
+  .nexus-sidebar *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .sidebar-nav-link {
+    opacity: 1;
   }
 }
