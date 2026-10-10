@@ -801,6 +801,7 @@ function LandingPage() {
   const featuresSlotRef = useRef<HTMLDivElement>(null);
   const ctaSlotRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [stepsRevealed, setStepsRevealed] = useState(false);
 
   const reduced = useMemo(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -833,6 +834,13 @@ function LandingPage() {
         entries.forEach((e) => {
           if (e.isIntersecting) {
             e.target.classList.add('is-visible');
+            if (
+              e.target.classList.contains('landing-step') ||
+              e.target.closest('.landing-steps') ||
+              e.target.closest('.landing-how')
+            ) {
+              setStepsRevealed(true);
+            }
             io.unobserve(e.target);
           }
         });
@@ -855,10 +863,10 @@ function LandingPage() {
 
  
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || !stepsRevealed) return;
     const id = window.setTimeout(() => setActiveStep((s) => (s + 1) % steps.length), 3800);
     return () => window.clearTimeout(id);
-  }, [activeStep, reduced]);
+  }, [activeStep, stepsRevealed, reduced]);
 
   const onHeroMove = (e: ReactMouseEvent<HTMLElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -1020,17 +1028,23 @@ function LandingPage() {
           <h2 data-reveal>Describe it. Build it. Use it.</h2>
         </div>
 
-        <div className="landing-steps">
-          <div className="landing-steps-line" aria-hidden="true">
+        {/* Upper loading bar above the boxes */}
+        <div className={`landing-steps-line-track ${stepsRevealed ? 'is-visible' : ''}`} aria-hidden="true" data-reveal>
+          <div className="landing-steps-line">
             <span style={{ transform: `scaleX(${(activeStep + 1) / steps.length})` }} />
           </div>
+        </div>
 
+        <div className="landing-steps">
           {steps.map((step, i) => (
             <button
               type="button"
               key={step.n}
-              className={`landing-step ${activeStep === i ? 'is-active' : ''}`}
-              onClick={() => setActiveStep(i)}
+              className={`landing-step ${activeStep === i ? 'is-active' : ''} ${stepsRevealed ? 'is-visible' : ''}`}
+              onClick={() => {
+                setActiveStep(i);
+                setStepsRevealed(true);
+              }}
               data-reveal
               style={{ '--d': `${i * 120}ms` } as CSSProperties}
             >
