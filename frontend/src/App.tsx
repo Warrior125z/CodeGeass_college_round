@@ -5,11 +5,11 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
-// import Workspace from './pages/Workspace';
-// import Websites from './pages/Websites';
-// import CRM from './pages/CRM';
-// import Webinars from './pages/Webinars';
-// import Analytics from './pages/Analytics';
+import Workspace from './pages/Workspace';
+import Websites from './pages/Websites';
+import CRM from './pages/CRM';
+import Webinars from './pages/Webinars';
+import Analytics from './pages/Analytics';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -30,7 +30,7 @@ function App() {
           }
         />
 
-        {/* <Route
+        <Route
           path="/app/workspace"
           element={
             <ProtectedRoute>
@@ -73,7 +73,7 @@ function App() {
               <Analytics />
             </ProtectedRoute>
           }
-        /> */}
+        />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

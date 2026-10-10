@@ -1,10 +1,12 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, BrainCircuit, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
+import { authenticateLocally } from '../services/auth';
 import '../styles/Login.css';
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,8 +21,12 @@ function Login() {
       return;
     }
 
-    // Backend authentication will be connected here.
-    setError('Login API is not connected yet.');
+    if (!authenticateLocally(email, password)) {
+      setError('We could not find an account with those details. Sign up first or check your password.');
+      return;
+    }
+
+    navigate('/app');
   }
 
   return (

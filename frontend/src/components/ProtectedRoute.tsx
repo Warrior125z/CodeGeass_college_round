@@ -1,13 +1,13 @@
 
 import { Navigate } from 'react-router-dom';
+import { isLocallyAuthenticated } from '../services/auth';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-  // Temporary placeholder until backend authentication is connected.
-  const isAuthenticated = false;
+  const isAuthenticated = isLocallyAuthenticated();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

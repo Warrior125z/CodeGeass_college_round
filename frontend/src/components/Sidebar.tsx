@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { clearLocalSession } from '../services/auth';
 import '../styles/Sidebar.css';
 
 const navigationItems = [
@@ -56,7 +57,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    // We'll connect this to the backend logout endpoint later.
+    clearLocalSession();
     navigate('/login');
   }
 

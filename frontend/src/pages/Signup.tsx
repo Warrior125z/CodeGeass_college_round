@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   BrainCircuit,
@@ -12,8 +12,10 @@ import {
   UserRound,
 } from 'lucide-react';
 import '../styles/Signup.css';
+import { createLocalAccount } from '../services/auth';
 
 function Signup() {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
@@ -38,8 +40,15 @@ function Signup() {
       return;
     }
 
-    // Registration API will be connected here.
-    setSuccess('Form validated. Account creation API is not connected yet.');
+    createLocalAccount({
+      name: name.trim(),
+      company: company.trim(),
+      email: email.trim(),
+      password,
+    });
+
+    setSuccess('Account created locally. Opening your workspace...');
+    navigate('/app');
   }
 
   return (
