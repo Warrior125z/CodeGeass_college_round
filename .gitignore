@@ -8,3 +8,18 @@
 # Python cache
 __pycache__/
 *.pyc
+# Local dependencies and environment
+node_modules/
+.venv/
+.venv-agent/
+venv/
+.env
+.env.*
+!.env.example
+
+# Local Netlify state
+.netlify/
+
+# Python cache
+__pycache__/
+*.pyc

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brew Corner – Coffee & Snacks</title>
+    <style>
+        /* Reset & basic typography */
+        *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height:1.6; color:#333; background:#fafafa; }
+        a { text-decoration:none; color:inherit; }
+        img { max-width:100%; height:auto; display:block; }
+
+        /* Layout */
+        header { background:#4a2c2a; color:#fff; }
+        .container { width:90%; max-width:1200px; margin:auto; padding:1rem 0; }
+        nav { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+        .logo { font-size:1.5rem; font-weight:bold; }
+        .nav-links { display:flex; gap:1rem; }
+        .nav-links a { color:#fff; padding:0.5rem 0; }
+        .nav-links a:hover { text-decoration:underline; }
+
+        /* Hero */
+        #home { background:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat; color:#fff; text-align:center; padding:8rem 1rem; }
+        #home h1 { font-size:2.5rem; margin-bottom:0.5rem; }
+        #home p { font-size:1.2rem; margin-bottom:1.5rem; }
+        .btn { background:#e0a96d; color:#4a2c2a; padding:0.75rem 1.5rem; border:none; border-radius:4px; cursor:pointer; font-weight:bold; }
+        .btn:hover { background:#d18e55; }
+
+        /* Sections */
+        section { padding:4rem 1rem; }
+        h2 { text-align:center; margin-bottom:2rem; font-size:2rem; color:#4a2c2a; }
+
+        /* Menu */
+        .menu-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem; }
+        .menu-item { background:#fff; border:1px solid #ddd; border-radius:8px; padding:1rem; text-align:center; }
+        .menu-item h3 { margin-bottom:0.5rem; font-size:1.2rem; color:#4a2c2a; }
+        .price { font-weight:bold; margin-top:0.5rem; color:#e0a96d; }
+
+        /* About */
+        .about-content { display:flex; flex-direction:column; gap:1.5rem; max-width:800px; margin:auto; }
+        .about-content p { text-align:justify; }
+
+        /* Contact */
+        .contact-details { display:flex; flex-direction:column; gap:0.5rem; margin-bottom:2rem; }
+        .contact-details div { display:flex; align-items:center; gap:0.5rem; }
+        .contact-form { background:#fff; padding:2rem; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); max-width:600px; margin:auto; }
+        .contact-form label { display:block; margin-bottom:0.5rem; font-weight:600; }
+        .contact-form input, .contact-form textarea { width:100%; padding:0.75rem; margin-bottom:1rem; border:1px solid #ccc; border-radius:4px; }
+        .contact-form button { background:#4a2c2a; color:#fff; border:none; padding:0.75rem 1.5rem; border-radius:4px; cursor:pointer; }
+        .contact-form button:hover { background:#3b221f; }
+
+        /* Footer */
+        footer { background:#4a2c2a; color:#fff; text-align:center; padding:1rem 0; }
+
+        /* Responsive tweaks */
+        @media (max-width:768px){
+            nav { flex-direction:column; }
+            .nav-links { margin-top:0.5rem; }
+            #home { padding:5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="home">
+    <div class="container">
+        <nav>
+            <div class="logo">Brew Corner</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#menu">Menu</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+        <h1>Welcome to Brew Corner</h1>
+        <p>Where every cup tells a story.</p>
+        <a href="#menu" class="btn">Explore Our Menu</a>
+    </div>
+</header>
+
+<section id="menu">
+    <div class="container">
+        <h2>Our Menu</h2>
+        <div class="menu-grid">
+            <!-- Coffee -->
+            <div class="menu-item">
+                <h3>Espresso</h3>
+                <p>Rich, full‑bodied shot of coffee.</p>
+                <div class="price">₹120</div>
+            </div>
+            <div class="menu-item">
+                <h3>Americano</h3>
+                <p>Espresso diluted with hot water.</p>
+                <div class="price">₹150</div>
+            </div>
+            <div class="menu-item">
+                <h3>Cappuccino</h3>
+                <p>Espresso with steamed milk & foam.</p>
+                <div class="price">₹180</div>
+            </div>
+            <div class="menu-item">
+                <h3>Latte</h3>
+                <p>Smooth blend of espresso and milk.</p>
+                <div class="price">₹190</div>
+            </div>
+            <div class="menu-item">
+                <h3>Mocha</h3>
+                <p>Chocolate‑infused latte.</p>
+                <div class="price">₹210</div>
+            </div>
+            <div class="menu-item">
+                <h3>Cold Brew</h3>
+                <p>Slow‑steeped cold coffee.</p>
+                <div class="price">₹200</div>
+            </div>
+            <!-- Snacks -->
+            <div class="menu-item">
+                <h3>Chocolate Chip Cookie</h3>
+                <p>Freshly baked, gooey centre.</p>
+                <div class="price">₹80</div>
+            </div>
+            <div class="menu-item">
+                <h3>Blueberry Muffin</h3>
+                <p>Soft muffin bursting with berries.</p>
+                <div class="price">₹90</div>
+            </div>
+            <div class="menu-item">
+                <h3>Cheese Toastie</h3>
+                <p>Grilled sandwich with melted cheese.</p>
+                <div class="price">₹120</div>
+            </div>
+            <div class="menu-item">
+                <h3>Veg Samosa</h3>
+                <p>Crispy pastry filled with spiced potatoes.</p>
+                <div class="price">₹70</div>
+            </div>
+            <div class="menu-item">
+                <h3>Masala Chai</h3>
+                <p>Traditional Indian spiced tea.</p>
+                <div class="price">₹100</div>
+            </div>
+            <div class="menu-item">
+                <h3>Fruit Salad</h3>
+                <p>Seasonal fresh fruits with a drizzle of honey.</p>
+                <div class="price">₹110</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" style="background:#f5f0ed;">
+    <div class="container">
+        <h2>Our Story</h2>
+        <div class="about-content">
+            <p>Founded in 2018, Brew Corner began as a small stall on a bustling Delhi street, driven by a love for aromatic coffee and warm conversations. Our founders, Arjun and Meera, wanted a place where people could pause, savor a perfectly brewed cup, and connect over simple, wholesome snacks.</p>
+            <p>Today, we’ve grown into a cozy neighborhood coffee shop that still holds onto that original spirit. We source our beans from sustainable farms across the Indian sub‑continent, roast them in‑house, and craft each drink with care. Our menu blends classic espresso‑based beverages with beloved Indian flavors like masala chai and spiced samosas.</p>
+            <p>At Brew Corner, we believe in community, sustainability, and the joy of a good cup of coffee. Whether you’re a regular or a first‑time visitor, you’ll find a welcoming corner to relax, work, or catch up with friends.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <h2>Contact Us</h2>
+        <div class="contact-details">
+            <div><strong>Address:</strong> 12, Connaught Place, New Delhi, 110001, India</div>
+            <div><strong>Phone:</strong> +91 98765 43210</div>
+            <div><strong>Email:</strong> info@brewcorner.in</div>
+        </div>
+
+        <form class="contact-form" action="#" method="post">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="John Doe">
+
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required placeholder="john@example.com">
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Your message..."></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        © 2024 Brew Corner. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>

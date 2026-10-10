@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import {
   ArrowUp,
@@ -15,6 +14,7 @@ import {
 
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
+import { sendAgentMessage } from '../services/agent';
 import '../styles/Workspace.css';
 
 const suggestions = [
@@ -23,7 +23,7 @@ const suggestions = [
     title: 'Build a website',
     description: 'Create a landing page for my business.',
     prompt:
-      'Create a modern landing page for my business with a hero section, features, pricing, and a contact form.',
+      'Build an actual website for my business. Generate and save the website files, and return the preview path so I can open it in my browser.',
   },
   {
     icon: Users,
@@ -52,6 +52,7 @@ type Message = {
   id: number;
   role: 'user' | 'assistant';
   content: string;
+  previewUrl?: string;
 };
 
 function Workspace() {
@@ -59,7 +60,7 @@ function Workspace() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isThinking, setIsThinking] = useState(false);
 
-  function handleSend(messageText?: string) {
+  async function handleSend(messageText?: string) {
     const text = (messageText ?? input).trim();
 
     if (!text || isThinking) return;
@@ -70,22 +71,52 @@ function Workspace() {
       content: text,
     };
 
+    const history = messages.map((message) => ({
+      role: message.role,
+      content: message.content,
+    }));
+
     setMessages((previous) => [...previous, userMessage]);
     setInput('');
     setIsThinking(true);
 
-    // Temporary response until the real AI API is connected.
-    window.setTimeout(() => {
+    try {
+      const response = await sendAgentMessage({
+        message: text,
+        history,
+      });
+
+      // Find the website preview path in the AI response.
+      const previewMatch = response.message.match(
+        /\/preview\/[a-zA-Z0-9_-]+\/index\.html/
+      );
+
       const assistantMessage: Message = {
         id: Date.now() + 1,
         role: 'assistant',
-        content:
-          'Your instruction has been received. Once the Nexus AI backend is connected, I will analyze your request, select the appropriate business tools, and show the workflow results here.',
+        content: response.message,
+        previewUrl: previewMatch?.[0],
       };
 
-      setMessages((previous) => [...previous, assistantMessage]);
+      setMessages((previous) => [
+        ...previous,
+        assistantMessage,
+      ]);
+    } catch (error) {
+      console.error('Nexus AI request failed:', error);
+
+      setMessages((previous) => [
+        ...previous,
+        {
+          id: Date.now() + 1,
+          role: 'assistant',
+          content:
+            'Sorry, I could not connect to Nexus AI. Please check that the backend is running and try again.',
+        },
+      ]);
+    } finally {
       setIsThinking(false);
-    }, 700);
+    }
   }
 
   return (
@@ -98,18 +129,38 @@ function Workspace() {
         <section
           className="workspace-content"
           onPointerMove={(event) => {
-            const rect = event.currentTarget.getBoundingClientRect();
-            event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
-            event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+            const rect =
+              event.currentTarget.getBoundingClientRect();
+
+            event.currentTarget.style.setProperty(
+              '--cursor-x',
+              `${event.clientX - rect.left}px`
+            );
+
+            event.currentTarget.style.setProperty(
+              '--cursor-y',
+              `${event.clientY - rect.top}px`
+            );
           }}
         >
-          <div className="nexus-ambient-layer" aria-hidden="true" />
-          <div className="nexus-floating-agent" aria-hidden="true">
+          <div
+            className="nexus-ambient-layer"
+            aria-hidden="true"
+          />
+
+          <div
+            className="nexus-floating-agent"
+            aria-hidden="true"
+          >
             <video autoPlay muted loop playsInline>
-              <source src="/videos/nexus-robot.mp4" type="video/mp4" />
+              <source
+                src="/videos/nexus-robot.mp4"
+                type="video/mp4"
+              />
             </video>
             <span>NEXUS AI</span>
           </div>
+
           <div className="workspace-heading">
             <div className="workspace-heading-icon">
               <Sparkles size={19} />
@@ -119,10 +170,12 @@ function Workspace() {
               <span className="workspace-eyebrow">
                 YOUR BUSINESS, SIMPLIFIED
               </span>
+
               <h2>What can we build today?</h2>
+
               <p>
-                Describe what you need. Nexus AI helps turn your ideas
-                into organized business workflows.
+                Describe what you need. Nexus AI helps turn your
+                ideas into organized business workflows.
               </p>
             </div>
           </div>
@@ -136,6 +189,7 @@ function Workspace() {
               </div>
 
               <h3>Your ideas start here.</h3>
+
               <p>
                 Ask Nexus AI to help with your website, leads,
                 webinars, or business insights.
@@ -150,7 +204,10 @@ function Workspace() {
                       className="workspace-suggestion-card"
                       type="button"
                       key={suggestion.title}
-                      onClick={() => handleSend(suggestion.prompt)}
+                      onClick={() =>
+                        handleSend(suggestion.prompt)
+                      }
+                      disabled={isThinking}
                     >
                       <span className="suggestion-icon">
                         <Icon size={18} />
@@ -158,7 +215,9 @@ function Workspace() {
 
                       <span className="suggestion-copy">
                         <strong>{suggestion.title}</strong>
-                        <span>{suggestion.description}</span>
+                        <span>
+                          {suggestion.description}
+                        </span>
                       </span>
 
                       <ArrowUp
@@ -191,14 +250,30 @@ function Workspace() {
                         ? 'Nexus AI'
                         : 'You'}
                     </span>
+
                     <p>{message.content}</p>
+
+                    {message.previewUrl && (
+                      <a
+                        href={`http://127.0.0.1:8000${message.previewUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="workspace-preview-link"
+                      >
+                        <Globe size={16} />
+                        Preview Website
+                      </a>
+                    )}
                   </div>
                 </article>
               ))}
 
               {isThinking && (
                 <div className="workspace-thinking">
-                  <LoaderCircle size={17} className="workspace-spinner" />
+                  <LoaderCircle
+                    size={17}
+                    className="workspace-spinner"
+                  />
                   <span>Nexus AI is thinking...</span>
                 </div>
               )}
@@ -215,7 +290,9 @@ function Workspace() {
             >
               <textarea
                 value={input}
-                onChange={(event) => setInput(event.target.value)}
+                onChange={(event) =>
+                  setInput(event.target.value)
+                }
                 onKeyDown={(event) => {
                   if (
                     event.key === 'Enter' &&
@@ -229,13 +306,16 @@ function Workspace() {
                 placeholder="Tell Nexus AI what you want to accomplish..."
                 rows={2}
                 aria-label="Message Nexus AI"
+                disabled={isThinking}
               />
 
               <div className="workspace-composer-footer">
                 <div className="workspace-composer-hint">
                   <Command size={13} />
                   <span>Business assistant</span>
-                  <span className="composer-hint-divider">·</span>
+                  <span className="composer-hint-divider">
+                    ·
+                  </span>
                   <span>Enter to send</span>
                 </div>
 
@@ -251,8 +331,8 @@ function Workspace() {
             </form>
 
             <p className="workspace-disclaimer">
-              Nexus AI can make mistakes. Review important business
-              actions before applying them.
+              Nexus AI can make mistakes. Review important
+              business actions before applying them.
             </p>
           </div>
 
@@ -260,9 +340,9 @@ function Workspace() {
             className="workspace-new-chat"
             type="button"
             onClick={() => {
+              if (isThinking) return;
               setMessages([]);
               setInput('');
-              setIsThinking(false);
             }}
           >
             <Plus size={15} />
