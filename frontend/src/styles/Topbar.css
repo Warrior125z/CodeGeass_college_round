@@ -1,0 +1,241 @@
+
+.nexus-topbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-height: 88px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 17px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(12, 13, 25, 0.9);
+}
+
+.nexus-topbar * {
+  box-sizing: border-box;
+}
+
+.topbar-title-area h1 {
+  margin: 0;
+  color: #f3f1ff;
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+.topbar-title-area p {
+  margin: 6px 0 0;
+  color: #8586a2;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar-search {
+  display: flex;
+  width: 240px;
+  min-height: 39px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  color: #8586a2;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.topbar-search:focus-within {
+  border-color: rgba(160, 141, 255, 0.45);
+}
+
+.topbar-search input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  color: #f3f1ff;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+}
+
+.topbar-search input::placeholder {
+  color: #777891;
+}
+
+.topbar-search kbd {
+  flex-shrink: 0;
+  padding: 3px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  color: #777891;
+  font-size: 9px;
+}
+
+.topbar-icon-button {
+  position: relative;
+  display: grid;
+  flex: 0 0 39px;
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  color: #a1a2bc;
+  background: rgba(255, 255, 255, 0.025);
+  cursor: pointer;
+}
+
+.topbar-icon-button:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.topbar-notification-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border: 1px solid #0c0d19;
+  border-radius: 50%;
+  background: #a795ff;
+}
+
+.topbar-profile-container {
+  position: relative;
+}
+
+.topbar-profile-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  color: #a1a2bc;
+  background: transparent;
+  cursor: pointer;
+}
+
+.topbar-avatar {
+  display: grid;
+  flex: 0 0 37px;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  border: 1px solid rgba(160, 141, 255, 0.25);
+  border-radius: 11px;
+  color: #b8a8ff;
+  background: rgba(125, 97, 255, 0.12);
+}
+
+.topbar-profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.topbar-profile-text strong {
+  color: #e9e7fb;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.topbar-profile-text span {
+  color: #8586a2;
+  font-size: 9px;
+}
+
+.topbar-profile-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  width: 175px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 7px;
+  border: 1px solid rgba(173, 159, 255, 0.16);
+  border-radius: 11px;
+  background: #17182a;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+.topbar-profile-menu button {
+  padding: 10px;
+  border: none;
+  border-radius: 7px;
+  color: #b5b5ce;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.topbar-profile-menu button:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 900px) {
+  .nexus-topbar {
+    padding-right: 20px;
+    padding-left: 65px;
+  }
+
+  .topbar-search {
+    width: 190px;
+  }
+}
+
+@media (max-width: 650px) {
+  .nexus-topbar {
+    min-height: 76px;
+    padding: 14px 15px 14px 63px;
+  }
+
+  .topbar-title-area h1 {
+    font-size: 16px;
+  }
+
+  .topbar-title-area p {
+    display: none;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .topbar-search {
+    width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .topbar-search input,
+  .topbar-search kbd {
+    display: none;
+  }
+
+  .topbar-profile-text,
+  .topbar-profile-button > svg {
+    display: none;
+  }
+
+  .topbar-avatar {
+    width: 35px;
+    height: 35px;
+  }
+}
