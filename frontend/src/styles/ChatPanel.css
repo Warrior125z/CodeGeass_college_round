@@ -1,5 +1,6 @@
 
 .nexus-chat-panel {
+  position: relative;
   display: flex;
   min-width: 0;
   min-height: 420px;
@@ -9,7 +10,45 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   color: #f1efff;
-  background: #101120;
+  background:
+    radial-gradient(circle 150px at var(--cursor-x, 50%) var(--cursor-y, 50%), rgba(126, 91, 255, 0.1), transparent 72%),
+    #101120;
+}
+
+.nexus-chat-panel::before,
+.nexus-chat-panel::after,
+.nexus-ambient-layer {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.nexus-chat-panel::before {
+  top: -90px;
+  right: -70px;
+  width: 220px;
+  height: 220px;
+  background: rgba(111, 78, 225, 0.2);
+  filter: blur(55px);
+  animation: nexus-ambient-drift 10s ease-in-out infinite alternate;
+}
+
+.nexus-chat-panel::after {
+  bottom: -100px;
+  left: -70px;
+  width: 230px;
+  height: 230px;
+  background: rgba(52, 106, 235, 0.14);
+  filter: blur(65px);
+  animation: nexus-ambient-drift 13s ease-in-out infinite alternate-reverse;
+}
+
+.chat-panel-header,
+.chat-panel-messages,
+.chat-panel-composer {
+  position: relative;
+  z-index: 1;
 }
 
 .nexus-chat-panel * {
@@ -158,6 +197,42 @@
   padding-left: 39px;
   color: #a59bcf;
   font-size: 10px;
+}
+
+.chat-panel-progress {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-panel-robot {
+  width: 54px;
+  height: 54px;
+  overflow: hidden;
+  border: 1px solid rgba(174, 145, 255, 0.34);
+  border-radius: 50%;
+  background: rgba(113, 82, 224, 0.2);
+  box-shadow: 0 0 24px rgba(139, 91, 255, 0.3);
+  animation: nexus-robot-float 2.4s ease-in-out infinite;
+}
+
+.chat-panel-robot video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: screen;
+}
+
+@keyframes nexus-ambient-drift {
+  from { transform: translate3d(-10px, 8px, 0) scale(0.94); }
+  to { transform: translate3d(12px, -10px, 0) scale(1.08); }
+}
+
+@keyframes nexus-robot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 .chat-panel-spinner {

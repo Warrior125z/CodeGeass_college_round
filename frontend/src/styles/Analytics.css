@@ -20,8 +20,99 @@
 }
 
 .analytics-content {
+  position: relative;
+  isolation: isolate;
   max-width: 1500px;
   margin: 0 auto;
+}
+
+.analytics-ambient-layer {
+  position: absolute;
+  inset: -80px -40px 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 190px at var(--cursor-x, 18%) var(--cursor-y, 20%), rgba(121, 81, 255, 0.2), transparent 72%),
+    radial-gradient(circle at 88% 72%, rgba(41, 122, 255, 0.12), transparent 25%);
+  animation: analytics-ambient-drift 14s ease-in-out infinite alternate;
+}
+
+.analytics-ambient-layer::before,
+.analytics-ambient-layer::after {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(161, 130, 255, 0.14);
+  border-radius: 38%;
+  content: '';
+  transform: rotate(25deg);
+  animation: analytics-orbit 16s linear infinite;
+}
+
+.nexus-floating-agent {
+  position: absolute;
+  top: 4px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(203, 190, 255, 0.62);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  opacity: 0.62;
+  pointer-events: none;
+  animation: nexus-agent-float 6s ease-in-out infinite;
+}
+
+.nexus-floating-agent video {
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 50%;
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 18px rgba(137, 91, 255, 0.45));
+  -webkit-mask-image: radial-gradient(circle, #000 38%, transparent 74%);
+  mask-image: radial-gradient(circle, #000 38%, transparent 74%);
+}
+
+.analytics-heading,
+.analytics-metrics-grid,
+.analytics-main-grid,
+.analytics-events-panel {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes nexus-agent-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+  50% { transform: translate3d(-10px, 10px, 0) rotate(3deg); }
+}
+
+.analytics-ambient-layer::before {
+  top: 12%;
+  right: 12%;
+}
+
+.analytics-ambient-layer::after {
+  bottom: 14%;
+  left: 8%;
+  width: 90px;
+  height: 90px;
+  animation-direction: reverse;
+  animation-duration: 12s;
+}
+
+@keyframes analytics-ambient-drift {
+  from { transform: scale(1); opacity: 0.65; }
+  to { transform: scale(1.08) translate3d(-1%, 1%, 0); opacity: 1; }
+}
+
+@keyframes analytics-orbit {
+  to { transform: rotate(385deg) translate3d(12px, -8px, 0); }
 }
 
 .analytics-heading {

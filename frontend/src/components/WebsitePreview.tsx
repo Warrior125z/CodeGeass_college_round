@@ -21,7 +21,15 @@ function WebsitePreview({
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
 
   return (
-    <section className="website-preview">
+    <section
+      className="website-preview"
+      onPointerMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+        event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+      }}
+    >
+      <div className="nexus-ambient-layer" aria-hidden="true" />
       <header className="website-preview-toolbar">
         <div className="website-preview-heading">
           <span className="website-preview-globe">

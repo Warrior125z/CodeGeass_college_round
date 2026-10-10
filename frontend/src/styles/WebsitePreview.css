@@ -1,5 +1,7 @@
 
 .website-preview {
+  position: relative;
+  isolation: isolate;
   width: 100%;
   min-width: 0;
   padding: 18px;
@@ -7,6 +9,24 @@
   border-radius: 16px;
   color: #f1efff;
   background: #101120;
+}
+
+.website-preview > .nexus-ambient-layer,
+.workflow-status > .nexus-ambient-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 150px at var(--cursor-x, 12%) var(--cursor-y, 8%), rgba(126, 91, 255, 0.18), transparent 72%),
+    radial-gradient(circle at 90% 85%, rgba(47, 117, 255, 0.12), transparent 24%);
+  animation: nexus-panel-drift 11s ease-in-out infinite alternate;
+}
+
+@keyframes nexus-panel-drift {
+  from { transform: scale(1); opacity: 0.65; }
+  to { transform: scale(1.12) translate3d(-1%, 1%, 0); opacity: 1; }
 }
 
 .website-preview * {

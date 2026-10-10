@@ -95,7 +95,21 @@ function Workspace() {
       <main className="workspace-main">
         <Topbar title="AI Workspace" />
 
-        <section className="workspace-content">
+        <section
+          className="workspace-content"
+          onPointerMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+            event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+          }}
+        >
+          <div className="nexus-ambient-layer" aria-hidden="true" />
+          <div className="nexus-floating-agent" aria-hidden="true">
+            <video autoPlay muted loop playsInline>
+              <source src="/videos/nexus-robot.mp4" type="video/mp4" />
+            </video>
+            <span>NEXUS AI</span>
+          </div>
           <div className="workspace-heading">
             <div className="workspace-heading-icon">
               <Sparkles size={19} />

@@ -1,6 +1,7 @@
 
 import { Bell, Search, ChevronDown, UserRound } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Topbar.css';
 
 type TopbarProps = {
@@ -10,6 +11,16 @@ type TopbarProps = {
 function Topbar({ title }: TopbarProps) {
   const [search, setSearch] = useState('');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
+
+  function handleSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const query = search.trim();
+
+    if (!query) return;
+
+    navigate(`/app/websites?search=${encodeURIComponent(query)}`);
+  }
 
   return (
     <header className="nexus-topbar">
@@ -19,7 +30,7 @@ function Topbar({ title }: TopbarProps) {
       </div>
 
       <div className="topbar-actions">
-        <label className="topbar-search">
+        <form className="topbar-search" onSubmit={handleSearch}>
           <Search size={17} />
           <input
             type="search"
@@ -29,7 +40,7 @@ function Topbar({ title }: TopbarProps) {
             aria-label="Search workspace"
           />
           <kbd>⌘ K</kbd>
-        </label>
+        </form>
 
         <button
           type="button"

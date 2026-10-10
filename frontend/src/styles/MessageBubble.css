@@ -1,10 +1,31 @@
 
 .message-bubble {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 12px;
   width: 100%;
   padding: 12px 0;
+}
+
+.message-bubble::after {
+  position: absolute;
+  top: var(--cursor-y, 50%);
+  left: var(--cursor-x, 50%);
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(142, 113, 255, 0.12);
+  content: '';
+  filter: blur(24px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+
+.message-bubble:hover::after {
+  opacity: 1;
 }
 
 .message-bubble-avatar {

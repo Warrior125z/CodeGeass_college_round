@@ -1,3 +1,8 @@
+/* ==========================================================================
+   Nexus AI dashboard
+   Calm layout, small purposeful motion: a staggered entrance, pointer-following
+   light on cards, a live AI prompt, and one 3D robot in the welcome card.
+   ========================================================================== */
 
 .dashboard-layout {
   display: flex;
@@ -16,6 +21,13 @@
   text-decoration: none;
 }
 
+.dashboard-layout a:focus-visible,
+.dashboard-layout button:focus-visible,
+.dashboard-layout input:focus-visible {
+  outline: 2px solid #a995ff;
+  outline-offset: 2px;
+}
+
 .dashboard-main {
   flex: 1;
   min-width: 0;
@@ -27,15 +39,36 @@
   padding: 28px 32px;
 }
 
+/* Staggered entrance: each block rises in, 80ms after the previous */
+.dash-rise {
+  animation: dash-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+@keyframes dash-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Welcome ---------- */
+
 .dashboard-welcome {
+  --mx: 40%;
+  --my: 50%;
   position: relative;
   display: flex;
-  min-height: 250px;
-  align-items: center;
+  min-height: 290px;
+  align-items: stretch;
   justify-content: space-between;
   gap: 25px;
   overflow: hidden;
-  padding: 35px 40px;
+  padding: 35px 0 35px 40px;
   border: 1px solid rgba(169, 152, 255, 0.19);
   border-radius: 20px;
   background:
@@ -43,10 +76,45 @@
     linear-gradient(115deg, #19172e, #111323);
 }
 
-.dashboard-welcome > div:first-child {
+/* slow drifting light + light that follows the pointer */
+.dashboard-welcome::before,
+.dashboard-welcome::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dashboard-welcome::before {
+  background:
+    radial-gradient(360px circle at 20% 30%, rgba(121, 92, 255, 0.16), transparent 70%),
+    radial-gradient(320px circle at 75% 80%, rgba(63, 130, 255, 0.12), transparent 70%);
+  animation: dash-drift 14s ease-in-out infinite alternate;
+}
+
+.dashboard-welcome::after {
+  background: radial-gradient(300px circle at var(--mx) var(--my), rgba(150, 125, 255, 0.13), transparent 70%);
+}
+
+@keyframes dash-drift {
+  from {
+    transform: translate3d(-3%, -2%, 0);
+  }
+  to {
+    transform: translate3d(3%, 3%, 0);
+  }
+}
+
+.dashboard-welcome-copy {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex: 1;
+  min-width: 0;
   max-width: 600px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .dashboard-eyebrow {
@@ -54,9 +122,15 @@
   align-items: center;
   gap: 9px;
   color: #aaa0ff;
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: 1.7px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.dashboard-date {
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  color: #8f90ab;
+  font-weight: 500;
 }
 
 .dashboard-live-dot {
@@ -65,10 +139,22 @@
   border-radius: 50%;
   background: #8ce0b1;
   box-shadow: 0 0 10px rgba(140, 224, 177, 0.65);
+  animation: dash-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dash-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.75);
+  }
 }
 
 .dashboard-welcome h1 {
-  margin: 20px 0 10px;
+  margin: 18px 0 8px;
   font-size: clamp(27px, 3vw, 38px);
   font-weight: 750;
   line-height: 1.2;
@@ -82,90 +168,143 @@
   line-height: 1.8;
 }
 
+/* AI prompt */
+
+.dashboard-prompt {
+  display: flex;
+  width: 100%;
+  max-width: 520px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 7px 7px 7px 14px;
+  border: 1px solid rgba(169, 152, 255, 0.25);
+  border-radius: 13px;
+  background: rgba(8, 8, 20, 0.55);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-prompt:focus-within {
+  border-color: rgba(169, 152, 255, 0.7);
+  box-shadow: 0 0 0 4px rgba(121, 92, 255, 0.16), 0 8px 40px rgba(104, 84, 255, 0.2);
+}
+
+.dashboard-prompt-icon {
+  flex-shrink: 0;
+  color: #a995ff;
+}
+
+.dashboard-prompt input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: #f2f1ff;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+}
+
+.dashboard-prompt input::placeholder {
+  color: #7f80a0;
+}
+
+.dashboard-kbd {
+  padding: 2px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  color: #8f90ab;
+  background: rgba(255, 255, 255, 0.04);
+  font: 600 11px Inter, sans-serif;
+}
+
+.dashboard-prompt:focus-within .dashboard-kbd {
+  display: none;
+}
+
+.dashboard-prompt-send {
+  display: grid;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(110deg, #785cff, #5b72f4);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-prompt-send:hover {
+  transform: translateX(2px);
+}
+
+.dashboard-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dashboard-chip {
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: #b3b4cc;
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.dashboard-chip:hover {
+  border-color: rgba(169, 152, 255, 0.5);
+  color: #fff;
+  background: rgba(132, 108, 255, 0.12);
+  transform: translateY(-1px);
+}
+
 .dashboard-ai-button {
   display: inline-flex;
   align-items: center;
   gap: 11px;
-  margin-top: 23px;
+  margin-top: 20px;
   padding: 13px 17px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   color: white;
-  background: linear-gradient(110deg, #785cff, #5b72f4);
+  background: rgba(255, 255, 255, 0.05);
   font-size: 12px;
   font-weight: 700;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .dashboard-ai-button:hover {
   transform: translateY(-2px);
+  border-color: rgba(169, 152, 255, 0.5);
+  background: rgba(132, 108, 255, 0.14);
 }
 
+/* 3D robot: fills the right side of the card edge to edge */
 .dashboard-welcome-art {
   position: relative;
-  display: grid;
-  flex: 0 0 230px;
-  width: 230px;
-  height: 205px;
-  place-items: center;
+  z-index: 1;
+  flex: 0 0 360px;
+  min-height: 220px;
 }
 
-.dashboard-orbit {
+.dashboard-welcome-art canvas {
   position: absolute;
-  border: 1px solid rgba(165, 149, 255, 0.2);
-  border-radius: 50%;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.dashboard-orbit-one {
-  width: 155px;
-  height: 155px;
-}
-
-.dashboard-orbit-two {
-  width: 210px;
-  height: 210px;
-  border-style: dashed;
-  opacity: 0.6;
-}
-
-.dashboard-orbit-core {
-  display: grid;
-  width: 92px;
-  height: 92px;
-  place-items: center;
-  border: 1px solid rgba(188, 174, 255, 0.4);
-  border-radius: 26px;
-  color: #c0b3ff;
-  background: linear-gradient(145deg, #39316e, #1d2047);
-  box-shadow: 0 0 60px rgba(114, 90, 255, 0.25);
-}
-
-.dashboard-orbit-icon {
-  position: absolute;
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  border: 1px solid rgba(174, 158, 255, 0.24);
-  border-radius: 12px;
-  color: #c2b5ff;
-  background: #1c1b38;
-}
-
-.dashboard-orbit-globe {
-  top: 5px;
-  right: 30px;
-}
-
-.dashboard-orbit-users {
-  bottom: 12px;
-  left: 7px;
-}
-
-.dashboard-orbit-chart {
-  right: 0;
-  bottom: 35px;
-}
+/* ---------- Section headings ---------- */
 
 .dashboard-section {
   margin-top: 35px;
@@ -202,28 +341,55 @@
   font-size: 11px;
 }
 
+/* ---------- Stat cards: pointer light + gentle tilt ---------- */
+
 .dashboard-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 15px;
   margin-top: 19px;
+  perspective: 1000px;
 }
 
 .dashboard-stat-card {
+  --rx: 0deg;
+  --ry: 0deg;
+  --px: 50%;
+  --py: 50%;
+  position: relative;
   min-width: 0;
+  overflow: hidden;
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 15px;
   background: linear-gradient(145deg, #151627, #10111e);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.15s ease-out, border-color 0.2s ease;
 }
 
-.dashboard-stat-card:hover {
-  transform: translateY(-3px);
+.dashboard-stat-card::before,
+.dashboard-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(240px circle at var(--px, 50%) var(--py, 50%), rgba(150, 125, 255, 0.16), transparent 70%);
+  transition: opacity 0.25s ease;
+}
+
+.dashboard-stat-card:hover,
+.dashboard-panel:hover {
   border-color: rgba(157, 140, 255, 0.35);
 }
 
+.dashboard-stat-card:hover::before,
+.dashboard-panel:hover::before {
+  opacity: 1;
+}
+
 .dashboard-stat-top {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -235,6 +401,11 @@
   height: 41px;
   place-items: center;
   border-radius: 12px;
+  transition: transform 0.25s ease;
+}
+
+.dashboard-stat-card:hover .dashboard-stat-icon {
+  transform: scale(1.1) rotate(-4deg);
 }
 
 .dashboard-stat-icon.purple {
@@ -259,27 +430,39 @@
 
 .dashboard-stat-arrow {
   color: #777994;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-stat-card:hover .dashboard-stat-arrow {
+  color: #b3a4ff;
+  transform: translateX(4px);
 }
 
 .dashboard-stat-card > p {
+  position: relative;
   margin: 19px 0 9px;
   color: #a6a6bf;
   font-size: 11px;
 }
 
 .dashboard-stat-card > strong {
+  position: relative;
   display: block;
   font-size: 27px;
   letter-spacing: -0.8px;
+  font-variant-numeric: tabular-nums;
 }
 
 .dashboard-stat-description {
+  position: relative;
   display: block;
   margin-top: 8px;
   color: #777993;
   font-size: 10px;
   line-height: 1.6;
 }
+
+/* ---------- Panels ---------- */
 
 .dashboard-lower-grid {
   display: grid;
@@ -289,11 +472,18 @@
 }
 
 .dashboard-panel {
+  position: relative;
   min-width: 0;
+  overflow: hidden;
   padding: 23px;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 16px;
   background: #11121f;
+  transition: border-color 0.2s ease;
+}
+
+.dashboard-panel > * {
+  position: relative;
 }
 
 .dashboard-panel-heading > svg {
@@ -314,12 +504,13 @@
   padding: 13px 11px;
   border: 1px solid transparent;
   border-radius: 11px;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .dashboard-quick-item:hover {
-  border-color: rgba(165, 147, 255, 0.15);
-  background: rgba(132, 108, 255, 0.06);
+  border-color: rgba(165, 147, 255, 0.18);
+  background: rgba(132, 108, 255, 0.08);
+  transform: translateX(3px);
 }
 
 .dashboard-quick-icon {
@@ -331,6 +522,12 @@
   border-radius: 11px;
   color: #b4a6ff;
   background: rgba(132, 108, 255, 0.11);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-quick-item:hover .dashboard-quick-icon {
+  color: #fff;
+  background: linear-gradient(135deg, #785cff, #5b72f4);
 }
 
 .dashboard-quick-text {
@@ -354,7 +551,15 @@
 .dashboard-quick-item > svg {
   flex-shrink: 0;
   color: #797a97;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
+
+.dashboard-quick-item:hover > svg {
+  color: #b3a4ff;
+  transform: translateX(3px);
+}
+
+/* ---------- Empty activity state ---------- */
 
 .dashboard-empty-state {
   display: flex;
@@ -366,6 +571,63 @@
   text-align: center;
 }
 
+/* shimmering placeholder rows hint at what the feed will look like */
+.dashboard-ghosts {
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.dashboard-ghost {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: calc(0.9 - var(--g) * 0.28);
+}
+
+.dashboard-ghost > span {
+  flex: 0 0 26px;
+  height: 26px;
+  border-radius: 8px;
+}
+
+.dashboard-ghost > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dashboard-ghost i {
+  display: block;
+  height: 6px;
+  border-radius: 4px;
+}
+
+.dashboard-ghost i:last-child {
+  width: 60%;
+}
+
+.dashboard-ghost > span,
+.dashboard-ghost i {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: dash-shimmer 2.2s linear infinite;
+  animation-delay: calc(var(--g) * 0.25s);
+}
+
+@keyframes dash-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 .dashboard-empty-icon {
   display: grid;
   width: 45px;
@@ -375,6 +637,16 @@
   border-radius: 14px;
   color: #b6a7ff;
   background: rgba(132, 108, 255, 0.1);
+  animation: dash-float 4s ease-in-out infinite;
+}
+
+@keyframes dash-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 .dashboard-empty-state > strong {
@@ -399,6 +671,14 @@
   font-weight: 700;
 }
 
+.dashboard-empty-state > a svg {
+  transition: transform 0.2s ease;
+}
+
+.dashboard-empty-state > a:hover svg {
+  transform: translateX(4px);
+}
+
 .dashboard-footer {
   display: flex;
   justify-content: space-between;
@@ -410,10 +690,11 @@
   font-size: 10px;
 }
 
+/* ---------- Responsive ---------- */
+
 @media (max-width: 1100px) {
   .dashboard-welcome-art {
-    flex-basis: 190px;
-    transform: scale(0.85);
+    flex-basis: 260px;
   }
 
   .dashboard-stats-grid {
@@ -452,6 +733,14 @@
     font-size: 27px;
   }
 
+  .dashboard-date {
+    display: none;
+  }
+
+  .dashboard-kbd {
+    display: none;
+  }
+
   .dashboard-stats-grid {
     gap: 10px;
   }
@@ -478,5 +767,25 @@
 
   .dashboard-footer {
     flex-direction: column;
+  }
+}
+
+@media (hover: none) {
+  .dashboard-stat-card {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-layout *,
+  .dashboard-layout *::before,
+  .dashboard-layout *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .dash-rise {
+    opacity: 1;
+    transform: none;
   }
 }

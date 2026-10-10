@@ -58,7 +58,15 @@ function WorkflowStatus({
   }
 
   return (
-    <section className="workflow-status">
+    <section
+      className="workflow-status"
+      onPointerMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty('--cursor-x', `${event.clientX - rect.left}px`);
+        event.currentTarget.style.setProperty('--cursor-y', `${event.clientY - rect.top}px`);
+      }}
+    >
+      <div className="nexus-ambient-layer" aria-hidden="true" />
       <header className="workflow-status-header">
         <div className="workflow-status-heading">
           <span className="workflow-status-icon">
