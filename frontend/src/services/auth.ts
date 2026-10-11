@@ -1,5 +1,7 @@
-const ACCOUNT_STORAGE_KEY = 'nexus-ai-local-account';
-const SESSION_STORAGE_KEY = 'nexus-ai-local-session';
+
+import api from './api';
+
+const TOKEN_STORAGE_KEY = 'nexus-ai-access-token';
 
 export type LocalAccount = {
   name: string;
@@ -8,55 +10,58 @@ export type LocalAccount = {
   password: string;
 };
 
-function readAccount(): LocalAccount | null {
-  const storedAccount = localStorage.getItem(ACCOUNT_STORAGE_KEY);
+type AuthResponse = {
+  message: string;
+  access_token: string;
+  token_type: string;
+  user: {
+    id: number;
+    email: string;
+  };
+};
 
-  if (!storedAccount) {
-    return null;
-  }
+type RegisterResponse = {
+  message: string;
+  user: {
+    id: number;
+    email: string;
+  };
+};
 
-  try {
-    return JSON.parse(storedAccount) as LocalAccount;
-  } catch {
-    localStorage.removeItem(ACCOUNT_STORAGE_KEY);
-    return null;
-  }
+export function createLocalAccount(
+  account: LocalAccount
+): Promise<RegisterResponse> {
+  return api.post<RegisterResponse>('/register', {
+    email: account.email.trim(),
+    password: account.password,
+  });
 }
 
-export function createLocalAccount(account: LocalAccount): void {
-  localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify(account));
-  localStorage.setItem(SESSION_STORAGE_KEY, account.email);
-}
-
-export function authenticateLocally(
+export async function authenticateLocally(
   email: string,
   password: string
-): boolean {
-  const account = readAccount();
+): Promise<boolean> {
+  const response = await api.post<AuthResponse>('/login', {
+    email: email.trim(),
+    password,
+  });
 
-  if (!account || account.email.toLowerCase() !== email.trim().toLowerCase()) {
-    return false;
-  }
+  sessionStorage.setItem(
+    TOKEN_STORAGE_KEY,
+    response.access_token
+  );
 
-  if (account.password !== password) {
-    return false;
-  }
-
-  localStorage.setItem(SESSION_STORAGE_KEY, account.email);
   return true;
 }
 
-export function isLocallyAuthenticated(): boolean {
-  const sessionEmail = localStorage.getItem(SESSION_STORAGE_KEY);
-  const account = readAccount();
+export function getAccessToken(): string | null {
+  return sessionStorage.getItem(TOKEN_STORAGE_KEY);
+}
 
-  return Boolean(
-    sessionEmail &&
-      account &&
-      account.email.toLowerCase() === sessionEmail.toLowerCase()
-  );
+export function isLocallyAuthenticated(): boolean {
+  return Boolean(getAccessToken());
 }
 
 export function clearLocalSession(): void {
-  localStorage.removeItem(SESSION_STORAGE_KEY);
+  sessionStorage.removeItem(TOKEN_STORAGE_KEY);
 }

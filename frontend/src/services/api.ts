@@ -1,6 +1,6 @@
 
 const API_BASE_URL = (
-  import.meta.env.VITE_API_URL || 'http://localhost:4000'
+  import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 ).replace(/\/+$/, '');
 
 type ApiOptions = {
@@ -25,7 +25,10 @@ async function request<T>(
   path: string,
   options: ApiOptions = {}
 ): Promise<T> {
+  
   const { method = 'GET', body, headers = {} } = options;
+
+  const token = sessionStorage.getItem('nexus-ai-access-token');
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
@@ -34,6 +37,7 @@ async function request<T>(
       ...(body !== undefined
         ? { 'Content-Type': 'application/json' }
         : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
@@ -49,20 +53,18 @@ async function request<T>(
     data = await response.text();
   }
 
-  if (!response.ok) {
-    let message = `Request failed with status ${response.status}`;
+ if (!response.ok) {
+   let message = `Request failed with status ${response.status}`;
 
-    if (
-      typeof data === 'object' &&
-      data !== null &&
-      'message' in data &&
-      typeof data.message === 'string'
-    ) {
+   if (typeof data === 'object' && data !== null) {
+     if ('detail' in data && typeof data.detail === 'string') {
+      message = data.detail;
+     } else if ('message' in data && typeof data.message === 'string') {
       message = data.message;
     }
-
-    throw new ApiError(message, response.status, data);
   }
+  throw new ApiError(message, response.status, data);
+ }
 
   return data as T;
 }

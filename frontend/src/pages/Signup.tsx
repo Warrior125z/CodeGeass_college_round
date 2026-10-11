@@ -16,6 +16,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { createLocalAccount } from '../services/auth';
+import { ApiError } from '../services/api';
 import '../styles/Signup.css';
 
 /* -------------------------------------------------------------------------- */
@@ -595,47 +596,60 @@ function Signup() {
     }
   }, []);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError('');
+  
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+  setError('');
+  setSuccessMessage('');
 
-    if (!name.trim()) {
-      setError('Please enter your full name.');
-      return;
-    }
+  if (!name.trim()) {
+    setError('Please enter your full name.');
+    return;
+  }
 
-    if (!email.trim()) {
-      setError('Please enter a valid email address.');
-      return;
-    }
+  if (!email.trim()) {
+    setError('Please enter a valid email address.');
+    return;
+  }
 
-    if (password.length < 8) {
-      setError('Password must contain at least 8 characters.');
-      return;
-    }
+  if (password.length < 8) {
+    setError('Password must contain at least 8 characters.');
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
+  if (password !== confirmPassword) {
+    setError('Passwords do not match.');
+    return;
+  }
 
-    createLocalAccount({
+  setIsSubmitted(true);
+
+  try {
+    await createLocalAccount({
       name: name.trim(),
       company: company.trim(),
       email: email.trim(),
       password,
     });
 
-    // Trigger bot running in circles sprint!
     botHandleRef.current?.runCircles();
-
     setSuccessMessage('Thank you for signing up!');
-    setIsSubmitted(true);
 
     window.setTimeout(() => {
       navigate('/app');
     }, 1500);
+  } catch (err) {
+    if (err instanceof ApiError) {
+      setError(err.message);
+    } else {
+      setError(
+        'Unable to connect to Nexus. Please check that the backend is running.'
+      );
+    }
+
+    setIsSubmitted(false);
   }
+}
 
   const onHeroMove = (e: ReactMouseEvent<HTMLElement>) => {
     const r = e.currentTarget.getBoundingClientRect();

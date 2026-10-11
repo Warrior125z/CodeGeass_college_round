@@ -14,6 +14,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { authenticateLocally } from '../services/auth';
+import { ApiError } from '../services/api';
 import '../styles/Login.css';
 
 /* -------------------------------------------------------------------------- */
@@ -502,27 +503,40 @@ function Login() {
     }
   }, []);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+ 
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     if (!email.trim() || !password) {
       setError('Please enter your email and password.');
       return;
     }
 
-    const targetEmail = email.trim();
-    authenticateLocally(targetEmail, password);
-
-    // Trigger bot spin and celebratory wave
-    botHandleRef.current?.spin();
-
-    setSuccessMessage('Thank you for logging in!');
     setIsSubmitted(true);
 
-    window.setTimeout(() => {
-      navigate('/app');
-    }, 1500);
+    try {
+      await authenticateLocally(email.trim(), password);
+
+      // Only celebrate after the backend confirms login.
+      botHandleRef.current?.spin();
+      setSuccessMessage('Thank you for logging in!');
+
+      window.setTimeout(() => {
+        navigate('/app');
+      }, 1500);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError(
+          'Unable to connect to Nexus. Please check that the backend is running.'
+        );
+      }
+
+      setIsSubmitted(false);
+    }
   }
 
   const onHeroMove = (e: ReactMouseEvent<HTMLElement>) => {
