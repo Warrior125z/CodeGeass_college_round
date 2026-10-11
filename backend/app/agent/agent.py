@@ -20,7 +20,7 @@ GENERATED_DIR = BACKEND_DIR / "generated_sites"
 
 GENERATED_DIR.mkdir(parents=True, exist_ok=True)
 
-load_dotenv(AGENT_DIR / ".env")
+load_dotenv(BACKEND_DIR / ".env")
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 MODEL = "openai/gpt-oss-120b"

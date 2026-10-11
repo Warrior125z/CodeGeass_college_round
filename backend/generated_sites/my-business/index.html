@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Business – Professional Services</title>
+    <style>
+        :root {
+            --primary: #0d47a1;
+            --primary-light: #5472d3;
+            --secondary: #ff9800;
+            --bg: #f5f5f5;
+            --text: #212121;
+            --white: #ffffff;
+            --max-width: 1200px;
+            --radius: 8px;
+        }
+        * { box-sizing: border-box; margin:0; padding:0; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+        }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        header {
+            background: var(--primary);
+            color: var(--white);
+        }
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 1rem 0;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .nav-links a {
+            color: var(--white);
+            font-weight: 500;
+        }
+        .hero {
+            background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 1rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        section {
+            padding: 4rem 1rem;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        .service-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .service-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .service-card .content {
+            flex: 1;
+            padding: 1rem;
+        }
+        .service-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        .service-card p {
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        .price {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        .about, .contact {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        .contact form {
+            display: grid;
+            gap: 1rem;
+        }
+        .contact input, .contact textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: var(--radius);
+            font-family: inherit;
+        }
+        .contact button {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            nav .nav-links { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="top">
+    <div class="container">
+        <nav>
+            <div class="logo">My Business</div>
+            <div class="nav-links">
+                <a href="#services">Services</a>
+                <a href="#about">About Us</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to My Business</h1>
+        <p>Providing professional solutions tailored to your needs.</p>
+        <a href="#services" class="btn-primary">Explore Services</a>
+    </div>
+</section>
+
+<section id="services">
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services">
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1581093588401-9d6c5b6d0f9c?auto=format&fit=crop&w=600&q=80" alt="Consulting">
+                <div class="content">
+                    <h3>Business Consulting</h3>
+                    <p>Strategic advice to help you grow and streamline operations.</p>
+                    <p class="price">₹ 15,000 per project</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80" alt="Web Development">
+                <div class="content">
+                    <h3>Web Development</h3>
+                    <p>Responsive, SEO‑friendly websites built with the latest technologies.</p>
+                    <p class="price">₹ 25,000 – ₹ 75,000</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="Digital Marketing">
+                <div class="content">
+                    <h3>Digital Marketing</h3>
+                    <p>Boost your online presence with targeted campaigns and analytics.</p>
+                    <p class="price">₹ 10,000 per month</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80" alt="Graphic Design">
+                <div class="content">
+                    <h3>Graphic Design</h3>
+                    <p>Creative designs for branding, marketing collateral, and more.</p>
+                    <p class="price">₹ 5,000 per design</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about">
+    <div class="container">
+        <div class="about">
+            <h2 class="section-title">About Us</h2>
+            <p>Founded in 2015, My Business has been delivering high‑quality services to clients across India and abroad. Our team combines expertise in technology, design, and strategy to create solutions that drive results.</p>
+            <p>We believe in transparency, collaboration, and continuous improvement. Whether you are a startup or an established enterprise, we tailor our approach to meet your unique challenges.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <div class="contact">
+            <h2 class="section-title">Get In Touch</h2>
+            <p>Have a question or want a free quote? Fill out the form below and we’ll get back to you within 24 hours.</p>
+            <form action="#" method="post">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <input type="tel" name="phone" placeholder="Phone Number">
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+            <p style="margin-top:1rem;">
+                📍 123 Business Avenue, Mumbai, Maharashtra, India<br>
+                📞 +91 98765 43210<br>
+                ✉️ info@mybusiness.in
+            </p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        © 2026 My Business. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>

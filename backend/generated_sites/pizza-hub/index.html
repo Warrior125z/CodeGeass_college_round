@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Hub – Fresh, Hot & Delicious</title>
+    <style>
+        :root {
+            --primary:#d62828;
+            --secondary:#f77f00;
+            --accent:#fcbf49;
+            --bg:#fff8f0;
+            --text:#333;
+            --light:#fff;
+            --max-width:1200px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{
+            font-family:Arial,Helvetica,sans-serif;
+            line-height:1.6;
+            color:var(--text);
+            background:var(--bg);
+        }
+        a{color:inherit;text-decoration:none;}
+        header{
+            background:url('https://images.unsplash.com/photo-1601924582975-7c6e6c1c5a5e?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            color:var(--light);
+            text-align:center;
+            padding:4rem 1rem;
+        }
+        header h1{font-size:2.5rem;margin-bottom:.5rem;}
+        header p{font-size:1.2rem;margin-bottom:1.5rem;}
+        nav{
+            background:rgba(0,0,0,0.6);
+            position:sticky;
+            top:0;
+            z-index:10;
+        }
+        nav ul{
+            display:flex;
+            justify-content:center;
+            list-style:none;
+            flex-wrap:wrap;
+        }
+        nav li{
+            margin:0.5rem;
+        }
+        nav a{
+            padding:0.5rem 1rem;
+            color:var(--light);
+            border-radius:4px;
+            transition:background .3s;
+        }
+        nav a:hover{
+            background:var(--secondary);
+        }
+        main{
+            max-width:var(--max-width);
+            margin:auto;
+            padding:2rem 1rem;
+        }
+        section{
+            margin-bottom:4rem;
+        }
+        .hero-btn{
+            background:var(--secondary);
+            color:var(--light);
+            padding:0.8rem 1.5rem;
+            border-radius:4px;
+            font-weight:bold;
+            display:inline-block;
+            margin-top:1rem;
+        }
+        .menu-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:1.5rem;
+        }
+        .menu-item{
+            background:var(--light);
+            border-radius:8px;
+            overflow:hidden;
+            box-shadow:0 2px 6px rgba(0,0,0,0.1);
+            transition:transform .3s;
+        }
+        .menu-item:hover{
+            transform:translateY(-5px);
+        }
+        .menu-item img{
+            width:100%;
+            height:150px;
+            object-fit:cover;
+        }
+        .menu-item h3{
+            padding:0.5rem 1rem;
+            font-size:1.2rem;
+            color:var(--primary);
+        }
+        .menu-item p{
+            padding:0 1rem 0.5rem;
+            font-size:0.95rem;
+        }
+        .price{
+            font-weight:bold;
+            color:var(--secondary);
+            margin-left:0.5rem;
+        }
+        .offers{
+            display:flex;
+            flex-direction:column;
+            gap:1.5rem;
+        }
+        .offer-card{
+            background:var(--secondary);
+            color:var(--light);
+            border-radius:8px;
+            padding:1.5rem;
+            text-align:center;
+        }
+        .offer-card h3{
+            margin-bottom:.5rem;
+        }
+        .contact-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:2rem;
+            align-items:start;
+        }
+        .contact-info{
+            background:var(--light);
+            padding:1.5rem;
+            border-radius:8px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.1);
+        }
+        .contact-info h3{
+            margin-bottom:.5rem;
+            color:var(--primary);
+        }
+        .footer{
+            background:var(--primary);
+            color:var(--light);
+            text-align:center;
+            padding:1rem;
+            font-size:0.9rem;
+        }
+        @media (max-width:600px){
+            header h1{font-size:2rem;}
+            header p{font-size:1rem;}
+        }
+    </style>
+</head>
+<body>
+    <header id="home">
+        <h1>Pizza Hub</h1>
+        <p>Hot, Fresh, & Irresistibly Tasty – Delivered to Your Doorstep</p>
+        <a href="#menu" class="hero-btn">Explore Our Menu</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#offers">Offers</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- MENU SECTION -->
+        <section id="menu">
+            <h2 style="text-align:center;margin-bottom:2rem;color:var(--primary);">Our Menu</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <img src="https://images.unsplash.com/photo-1601924582975-7c6e6c1c5a5e?auto=format&fit=crop&w=400&q=80" alt="Margherita Pizza">
+                    <h3>Margherita <span class="price">₹199</span></h3>
+                    <p>Classic cheese & tomato base with fresh basil.</p>
+                </div>
+                <div class="menu-item">
+                    <img src="https://images.unsplash.com/photo-1555992336-03a23c5c2c5e?auto=format&fit=crop&w=400&q=80" alt="Pepperoni Pizza">
+                    <h3>Pepperoni <span class="price">₹259</span></h3>
+                    <p>Spicy pepperoni slices over mozzarella and tomato sauce.</p>
+                </div>
+                <div class="menu-item">
+                    <img src="https://images.unsplash.com/photo-1601924582975-7c6e6c1c5a5e?auto=format&fit=crop&w=400&q=80" alt="Veggie Delight">
+                    <h3>Veggie Delight <span class="price">₹229</span></h3>
+                    <p>Bell peppers, olives, onions, mushrooms & fresh corn.</p>
+                </div>
+                <div class="menu-item">
+                    <img src="https://images.unsplash.com/photo-1555992336-03a23c5c2c5e?auto=format&fit=crop&w=400&q=80" alt="Chicken Tikka Pizza">
+                    <h3>Chicken Tikka <span class="price">₹279</span></h3>
+                    <p>Grilled chicken tikka pieces with mint yogurt drizzle.</p>
+                </div>
+                <div class="menu-item">
+                    <img src="https://images.unsplash.com/photo-1601924582975-7c6e6c1c5a5e?auto=format&fit=crop&w=400&q=80" alt="Paneer Makhani">
+                    <h3>Paneer Makhani <span class="price">₹249</span></h3>
+                    <p>Creamy tomato gravy with cubes of cottage cheese.</p>
+                </div>
+                <div class="menu-item">
+                    <img src="https://images.unsplash.com/photo-1555992336-03a23c5c2c5e?auto=format&fit=crop&w=400&q=80" alt="BBQ Beef">
+                    <h3>BBQ Beef <span class="price">₹299</span></h3>
+                    <p>Smoky BBQ sauce, tender beef strips, red onions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- OFFERS SECTION -->
+        <section id="offers">
+            <h2 style="text-align:center;margin-bottom:2rem;color:var(--primary);">Special Offers</h2>
+            <div class="offers">
+                <div class="offer-card">
+                    <h3>Buy 1 Get 1 Free</h3>
+                    <p>Order any medium pizza and get another of the same size free. Valid till 30 Sep.</p>
+                </div>
+                <div class="offer-card">
+                    <h3>Family Feast</h3>
+                    <p>4 Large Pizzas + 2 Garlic Breads + 2 Litre Cola for just ₹999.</p>
+                </div>
+                <div class="offer-card">
+                    <h3>Student Discount</h3>
+                    <p>Show your student ID and enjoy 15% off on all orders.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact">
+            <h2 style="text-align:center;margin-bottom:2rem;color:var(--primary);">Get In Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Address</h3>
+                    <p>123, Food Street,<br>New Delhi, India - 110001</p>
+                </div>
+                <div class="contact-info">
+                    <h3>Phone</h3>
+                    <p>+91 98765 43210</p>
+                </div>
+                <div class="contact-info">
+                    <h3>Email</h3>
+                    <p>info@pizzahub.in</p>
+                </div>
+                <div class="contact-info">
+                    <h3>Opening Hours</h3>
+                    <p>Mon – Sun: 11:00 AM – 11:00 PM</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        © 2026 Pizza Hub. All rights reserved.
+    </footer>
+</body>
+</html>
